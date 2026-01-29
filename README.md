@@ -32,7 +32,7 @@ It's a **macOS app** that runs a local REST API for your HomeKit devices. The CL
 - 🖥️ **macOS app** runs the server on `localhost:8420`
 - ⌨️ **CLI** sends requests to the app
 - 🏠 **100% Apple HomeKit** — no reverse engineering, no cloud APIs
-- 🔒 **Local only** — never touches the internet
+- 🔒 **Local only** — never touches the internet (unless you're an idiot)
 - 🚀 **Raycast extension** — coming soon
 
 ---
@@ -135,7 +135,7 @@ lilhomie scene "Good Night"      # Trigger scene
 
 - **Home automation scripts** — bash, Python, Node.js
 - **Stream Deck buttons** — trigger via curl
-- **Raycast/Alfred** — quick device control
+- **Clawdbot** — quick device control via imessage
 - **Webhooks** — IFTTT, n8n, Home Assistant
 - **Cron jobs** — scheduled lighting
 - **SSH** — control home from anywhere
@@ -174,6 +174,6 @@ MIT — see [LICENSE](LICENSE)
 ---
 
 <p align="center">
-  Made so an AI could turn off my lights.<br>
+  Made because siri sucks at turning off my lights.<br>
   <a href="https://github.com/ghostmfr">Ghost Manufacture</a>
 </p>
