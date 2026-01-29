@@ -92,11 +92,18 @@ class HTTPServer {
     }
     
     private func route(method: String, path: String, body: [String: Any]?) -> String {
+        NSLog("[HTTP] \(method) \(path)")
         
         // MARK: - Health & Debug
         
         if path == "/health" {
             return jsonResponse(["status": "ok", "port": port, "app": "Homie"])
+        }
+        
+        // Echo endpoint for debugging
+        if path.hasPrefix("/echo/") {
+            let value = String(path.dropFirst("/echo/".count))
+            return jsonResponse(["received": value, "length": value.count, "bytes": Array(value.utf8)])
         }
         
         if path == "/debug" {
@@ -120,18 +127,37 @@ class HTTPServer {
         
         if method == "GET" && path.hasPrefix("/device/") && !path.contains("/toggle") && !path.contains("/set") {
             let id = String(path.dropFirst("/device/".count))
+            NSLog("[HTTP] Looking up device: '\(id)'")
             if let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) {
                 return jsonResponse(deviceToDict(device))
             }
-            return errorResponse(404, "Device not found")
+            // Better error message with suggestions
+            let suggestions = homeKitManager.devices
+                .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
+                .prefix(3)
+                .map { $0.name }
+            if suggestions.isEmpty {
+                return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
+            } else {
+                return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
+            }
         }
         
         if method == "POST" && path.hasSuffix("/toggle") {
             let pathWithoutToggle = String(path.dropLast("/toggle".count))
             let id = String(pathWithoutToggle.dropFirst("/device/".count))
+            NSLog("[HTTP] Toggle device: '\(id)'")
             
             guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
-                return errorResponse(404, "Device not found")
+                let suggestions = homeKitManager.devices
+                    .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
+                    .prefix(3)
+                    .map { $0.name }
+                if suggestions.isEmpty {
+                    return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
+                } else {
+                    return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
+                }
             }
             
             let semaphore = DispatchSemaphore(value: 0)

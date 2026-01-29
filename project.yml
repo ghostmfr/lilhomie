@@ -4,9 +4,11 @@ options:
   deploymentTarget:
     iOS: "16.0"
     macCatalyst: "13.0"
+    macOS: "13.0"
   createIntermediateGroups: true
 
 targets:
+  # Mac Catalyst target (current - works on iPad too)
   Homie:
     type: application
     platform: iOS
@@ -15,6 +17,7 @@ targets:
       - path: Homie
         excludes:
           - "*.entitlements"
+          - "macOS/**"
     entitlements:
       path: Homie/Homie.entitlements
     settings:
@@ -38,3 +41,35 @@ targets:
       - sdk: HomeKit.framework
       - sdk: Network.framework
       - sdk: ServiceManagement.framework
+
+  # Native macOS target (full features - app-aware scenes, menu bar)
+  HomieMac:
+    type: application
+    platform: macOS
+    sources:
+      - path: Homie
+        excludes:
+          - "*.entitlements"
+      - path: HomieMac
+    entitlements:
+      path: HomieMac/HomieMac.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.homie.mac
+        PRODUCT_NAME: Homie
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+        CODE_SIGN_ENTITLEMENTS: HomieMac/HomieMac.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSHomeKitUsageDescription: "Homie needs access to your HomeKit devices to display and control them."
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Homie runs a local HTTP server for automation integrations."
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
+    dependencies:
+      - sdk: HomeKit.framework
+      - sdk: Network.framework
+      - sdk: ServiceManagement.framework
+      - sdk: AppKit.framework

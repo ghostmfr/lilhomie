@@ -3,17 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0033111A5E0DEF2DDCA42A0A /* MacMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A0933C371CEFDE9F3A96F /* MacMenuBarView.swift */; };
+		068A46992F17DA69BBAD0DEC /* HomieApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3EF13E3DCE2E0F5588CD70 /* HomieApp.swift */; };
+		0BA2253837C1705EEC13C874 /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */; };
+		1E8895CD41B210FE6F348B22 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E056276B11075CD3826DDE9C /* HomeKit.framework */; };
 		21DCF16AC5BFECB688DF405D /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */; };
+		35B325F12BFD6FBDD49CD27A /* MacAppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A0C01A757EDD52050C1B23 /* MacAppMonitor.swift */; };
+		3B8C48302F112E0C0C748672 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C7D1D1F190CF0E1E7C9219 /* Network.framework */; };
 		3F3406A9D1E52548B53B6FCE /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C7D1D1F190CF0E1E7C9219 /* Network.framework */; };
+		3F3659140B67B2A80C142D42 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */; };
+		472C44F15528A2D803580020 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F75566920457F4B5309CA7 /* SettingsView.swift */; };
+		63EB44EC9FF993EDC8C9CDA7 /* MacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F838093FEC5FCF7CA274FE /* MacSettingsView.swift */; };
 		6422305EBC512D51D6C09CB9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F75566920457F4B5309CA7 /* SettingsView.swift */; };
 		65C3F7F29426309E5A612A26 /* HomieApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3EF13E3DCE2E0F5588CD70 /* HomieApp.swift */; };
+		68578A5D4D05786105F2DE05 /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */; };
+		6D5CEFA8EC78A55521C81E78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10F78ED67B2CEE1824DAF8B6 /* AppDelegate.swift */; };
 		7691EF48AC2E8DD17F590B78 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E056276B11075CD3826DDE9C /* HomeKit.framework */; };
 		7ACF5076082896AE161D8EA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10F78ED67B2CEE1824DAF8B6 /* AppDelegate.swift */; };
+		7C5B27F23391262F549A0759 /* HomieMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00290E6650F1783B4C763E6A /* HomieMacApp.swift */; };
 		81E7DBADF5D001D5C2CFA81B /* HomieCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D53186C121A44DCE23BE344 /* HomieCharacter.swift */; };
+		94B9F00AC92AA81385431AE2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 200B9DE9E0DA058D5F64C9AA /* AppKit.framework */; };
+		AE125939142B879E302A8621 /* HomeKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */; };
+		B5C3BDCC77345AE92EB517DE /* RuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E38E9F04F28CABF500CCB50 /* RuleEngine.swift */; };
+		B9ADE5E6ACCC37413F91B23B /* HomieCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D53186C121A44DCE23BE344 /* HomieCharacter.swift */; };
 		CC36CC597D7078716A1E47E9 /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */; };
 		DB56D3A479DFA8D39CECC477 /* HomeKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */; };
 		E7F3DD7B70B786E638A1C0DE /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */; };
@@ -21,16 +37,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00E6DF1970F015F5A1F80E7D /* Homie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Homie.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		00290E6650F1783B4C763E6A /* HomieMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomieMacApp.swift; sourceTree = "<group>"; };
+		00E6DF1970F015F5A1F80E7D /* Homie.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Homie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10F78ED67B2CEE1824DAF8B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		200B9DE9E0DA058D5F64C9AA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		24F75566920457F4B5309CA7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2CA127665EFC4C61B7BB208A /* HomieMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomieMac.entitlements; sourceTree = "<group>"; };
+		5A3A0933C371CEFDE9F3A96F /* MacMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacMenuBarView.swift; sourceTree = "<group>"; };
 		6E38E9F04F28CABF500CCB50 /* RuleEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleEngine.swift; sourceTree = "<group>"; };
 		72C7D1D1F190CF0E1E7C9219 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		7D3EF13E3DCE2E0F5588CD70 /* HomieApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomieApp.swift; sourceTree = "<group>"; };
 		7D53186C121A44DCE23BE344 /* HomieCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomieCharacter.swift; sourceTree = "<group>"; };
 		80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMonitor.swift; sourceTree = "<group>"; };
+		91F838093FEC5FCF7CA274FE /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
+		98A0C01A757EDD52050C1B23 /* MacAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAppMonitor.swift; sourceTree = "<group>"; };
 		A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPServer.swift; sourceTree = "<group>"; };
+		D957B53CE8B8A9D9F6D552BF /* HomieMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomieMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeKitManager.swift; sourceTree = "<group>"; };
 		E056276B11075CD3826DDE9C /* HomeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HomeKit.framework; path = System/Library/Frameworks/HomeKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -43,6 +66,17 @@
 				7691EF48AC2E8DD17F590B78 /* HomeKit.framework in Frameworks */,
 				3F3406A9D1E52548B53B6FCE /* Network.framework in Frameworks */,
 				E7F3DD7B70B786E638A1C0DE /* ServiceManagement.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F38452F49CCF81D55311DE0D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E8895CD41B210FE6F348B22 /* HomeKit.framework in Frameworks */,
+				3B8C48302F112E0C0C748672 /* Network.framework in Frameworks */,
+				3F3659140B67B2A80C142D42 /* ServiceManagement.framework in Frameworks */,
+				94B9F00AC92AA81385431AE2 /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,15 +116,29 @@
 			isa = PBXGroup;
 			children = (
 				2DB57F23902F67A6A61C21B3 /* Homie */,
+				8E19609BC6594D004297F2A7 /* HomieMac */,
 				E5A96A561C267A8400DF52C5 /* Frameworks */,
 				A4C2221B0BFC3282A18CCEC9 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		8E19609BC6594D004297F2A7 /* HomieMac */ = {
+			isa = PBXGroup;
+			children = (
+				2CA127665EFC4C61B7BB208A /* HomieMac.entitlements */,
+				00290E6650F1783B4C763E6A /* HomieMacApp.swift */,
+				98A0C01A757EDD52050C1B23 /* MacAppMonitor.swift */,
+				5A3A0933C371CEFDE9F3A96F /* MacMenuBarView.swift */,
+				91F838093FEC5FCF7CA274FE /* MacSettingsView.swift */,
+			);
+			path = HomieMac;
 			sourceTree = "<group>";
 		};
 		A4C2221B0BFC3282A18CCEC9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				00E6DF1970F015F5A1F80E7D /* Homie.app */,
+				D957B53CE8B8A9D9F6D552BF /* HomieMac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,6 +171,7 @@
 		E5A96A561C267A8400DF52C5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				200B9DE9E0DA058D5F64C9AA /* AppKit.framework */,
 				E056276B11075CD3826DDE9C /* HomeKit.framework */,
 				72C7D1D1F190CF0E1E7C9219 /* Network.framework */,
 				24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */,
@@ -168,6 +217,24 @@
 			productReference = 00E6DF1970F015F5A1F80E7D /* Homie.app */;
 			productType = "com.apple.product-type.application";
 		};
+		96CEA78B2245992B2EE4795C /* HomieMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 788BE30A33B3380E9B0AEC3C /* Build configuration list for PBXNativeTarget "HomieMac" */;
+			buildPhases = (
+				4FA707BD738216C925F96A00 /* Sources */,
+				F38452F49CCF81D55311DE0D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HomieMac;
+			packageProductDependencies = (
+			);
+			productName = HomieMac;
+			productReference = D957B53CE8B8A9D9F6D552BF /* HomieMac.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -178,6 +245,9 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					13C9420F0B5127D030A238FB = {
+						ProvisioningStyle = Automatic;
+					};
+					96CEA78B2245992B2EE4795C = {
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -192,15 +262,36 @@
 			);
 			mainGroup = 6C8A8ECC6756DA77CD0CACCE;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				13C9420F0B5127D030A238FB /* Homie */,
+				96CEA78B2245992B2EE4795C /* HomieMac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4FA707BD738216C925F96A00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D5CEFA8EC78A55521C81E78 /* AppDelegate.swift in Sources */,
+				68578A5D4D05786105F2DE05 /* AppMonitor.swift in Sources */,
+				0BA2253837C1705EEC13C874 /* HTTPServer.swift in Sources */,
+				AE125939142B879E302A8621 /* HomeKitManager.swift in Sources */,
+				068A46992F17DA69BBAD0DEC /* HomieApp.swift in Sources */,
+				B9ADE5E6ACCC37413F91B23B /* HomieCharacter.swift in Sources */,
+				7C5B27F23391262F549A0759 /* HomieMacApp.swift in Sources */,
+				35B325F12BFD6FBDD49CD27A /* MacAppMonitor.swift in Sources */,
+				0033111A5E0DEF2DDCA42A0A /* MacMenuBarView.swift in Sources */,
+				63EB44EC9FF993EDC8C9CDA7 /* MacSettingsView.swift in Sources */,
+				B5C3BDCC77345AE92EB517DE /* RuleEngine.swift in Sources */,
+				472C44F15528A2D803580020 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85EC91F0037AF85F2BCFA348 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -219,17 +310,41 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		5503414665E18C57F873CBE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HomieMac/HomieMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHomeKitUsageDescription = "Homie needs access to your HomeKit devices to display and control them.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Homie runs a local HTTP server for automation integrations.";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.homie.mac;
+				PRODUCT_NAME = Homie;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		A0B95804D65317BF4B35D0CA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Homie/Homie.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = Y7HZ9MR5W8;
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -243,8 +358,6 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.homie.app;
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ghostmfr.homie;
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = com.ghostmfr.homie;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
@@ -253,6 +366,32 @@
 				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
+		};
+		B06F7B9162CAFA0968095DAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HomieMac/HomieMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHomeKitUsageDescription = "Homie needs access to your HomeKit devices to display and control them.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Homie runs a local HTTP server for automation integrations.";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.homie.mac;
+				PRODUCT_NAME = Homie;
+				SDKROOT = macosx;
+			};
+			name = Debug;
 		};
 		C252EB6F2D9DF240C04C8333 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -306,11 +445,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -323,11 +462,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Homie/Homie.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = Y7HZ9MR5W8;
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -341,8 +478,6 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.homie.app;
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ghostmfr.homie;
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = com.ghostmfr.homie;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
@@ -398,10 +533,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -416,6 +551,15 @@
 			buildConfigurations = (
 				C252EB6F2D9DF240C04C8333 /* Debug */,
 				F2D932B9EDC2F14E2E64D7B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		788BE30A33B3380E9B0AEC3C /* Build configuration list for PBXNativeTarget "HomieMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B06F7B9162CAFA0968095DAB /* Debug */,
+				5503414665E18C57F873CBE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
