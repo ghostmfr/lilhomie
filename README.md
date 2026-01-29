@@ -1,12 +1,11 @@
 <p align="center">
-  <img src="docs/images/icon.png" width="128" alt="lil homie icon">
+  <img src="docs/images/icon.png" width="128" alt="lilhomie icon">
 </p>
 
-<h1 align="center">lil homie</h1>
+<h1 align="center">lilhomie</h1>
 
 <p align="center">
-  <strong>HomeKit REST API + CLI for macOS</strong><br>
-  <em>runs so you don't have to.</em>
+  <strong>HomeKit REST API + CLI for macOS</strong>
 </p>
 
 <p align="center">
@@ -17,12 +16,24 @@
 
 ---
 
-**lil homie** exposes your HomeKit devices via a local REST API and CLI. Control lights, switches, and scenes from scripts, terminals, webhooks, or any automation tool.
+I built **lilhomie** so my AI assistant could control my house. Now you can too.
 
-- 🌐 **REST API** on `localhost:8420`
-- ⌨️ **CLI** — `lilhomie` command
-- 🏠 **Native HomeKit** — uses Apple's HomeKit framework
+It's a **macOS app** that runs a local REST API for your HomeKit devices. The CLI talks to the app. No hacks, no workarounds — just Apple's native HomeKit framework exposed over HTTP.
+
+### How it works
+
+```
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│  lilhomie CLI   │ ───► │  lilhomie.app   │ ───► │    HomeKit      │
+│  (or any HTTP)  │      │  (REST server)  │      │   (Apple API)   │
+└─────────────────┘      └─────────────────┘      └─────────────────┘
+```
+
+- 🖥️ **macOS app** runs the server on `localhost:8420`
+- ⌨️ **CLI** sends requests to the app
+- 🏠 **100% Apple HomeKit** — no reverse engineering, no cloud APIs
 - 🔒 **Local only** — never touches the internet
+- 🚀 **Raycast extension** — coming soon
 
 ---
 
@@ -32,14 +43,14 @@
 
 Grab the latest release:
 
-👉 **[Download lil homie](https://github.com/ghostmfr/lilhomie/releases/latest)**
+👉 **[Download lilhomie](https://github.com/ghostmfr/lilhomie/releases/latest)**
 
 - `lil-homie-v1.0-mac.zip` — macOS app
 - `lilhomie-cli-v1.0.zip` — CLI binary
 
 ### Setup
 
-1. Unzip and drag **lil homie.app** to Applications
+1. Unzip and drag **lilhomie.app** to Applications
 2. Launch and grant HomeKit access when prompted
 3. Server starts automatically on port 8420
 
@@ -163,5 +174,6 @@ MIT — see [LICENSE](LICENSE)
 ---
 
 <p align="center">
-  Built with 🏠💨 by <a href="https://github.com/ghostmfr">Ghost Manufacture</a>
+  Made so an AI could turn off my lights.<br>
+  <a href="https://github.com/ghostmfr">Ghost Manufacture</a>
 </p>
