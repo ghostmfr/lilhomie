@@ -35,6 +35,14 @@ It's a **macOS app** that runs a local REST API for your HomeKit devices. The CL
 - 🔒 **Local only** — never touches the internet (unless you're an idiot)
 - 🚀 **Raycast extension** — coming soon
 
+### Screenshots
+
+<p align="center">
+  <img src="docs/images/main.png" width="280" alt="lilhomie main view">
+  <img src="docs/images/endpoints.png" width="280" alt="lilhomie API endpoints">
+  <img src="docs/images/settings.png" width="280" alt="lilhomie settings">
+</p>
+
 ---
 
 ## Installation
