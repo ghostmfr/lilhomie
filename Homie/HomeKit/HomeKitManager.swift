@@ -43,7 +43,7 @@ class HomeKitManager: NSObject, ObservableObject {
     @Published var devices: [HomeDevice] = []
     @Published var scenes: [HomeScene] = []
     
-    private var accessoryCharacteristics: [String: HMCharacteristic] = []
+    private var accessoryCharacteristics: [String: HMCharacteristic] = [:]
     private var sceneObjects: [String: HMActionSet] = [:]
     
     override init() {
