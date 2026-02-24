@@ -66,7 +66,7 @@ Grab the latest release:
 
 ```bash
 # Download and install
-curl -L https://github.com/ghostmfr/lilhomie/releases/latest/download/lilhomie-cli-v1.0.zip -o lilhomie.zip
+curl -L https://github.com/ghostmfr/lilhomie/releases/latest/download/lilhomie-cli.zip -o lilhomie.zip
 unzip lilhomie.zip
 sudo mv lilhomie /usr/local/bin/
 ```
