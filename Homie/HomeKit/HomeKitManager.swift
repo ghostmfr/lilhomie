@@ -66,7 +66,7 @@ class HomeKitManager: NSObject, ObservableObject {
     
     // MARK: - Devices
     
-    func loadDevices() {
+    func loadDevices(completion: (() -> Void)? = nil) {
         NSLog("[HomeKit] Loading devices...")
         var allDevices: [HomeDevice] = []
         accessoryCharacteristics.removeAll()
@@ -82,6 +82,7 @@ class HomeKitManager: NSObject, ObservableObject {
         DispatchQueue.main.async {
             self.devices = allDevices.sorted { $0.name < $1.name }
             NotificationCenter.default.post(name: .devicesUpdated, object: nil)
+            completion?()
         }
     }
     
@@ -241,13 +242,17 @@ class HomeKitManager: NSObject, ObservableObject {
                 brightnessChar.writeValue(brightness) { error in
                     if let error = error {
                         NSLog("[HomeKit] Error setting brightness: \(error)")
+                        completion(false)
+                        return
                     }
-                    self?.loadDevices()
-                    completion(error == nil)
+                    self?.loadDevices {
+                        completion(true)
+                    }
                 }
             } else {
-                self?.loadDevices()
-                completion(true)
+                self?.loadDevices {
+                    completion(true)
+                }
             }
         }
     }

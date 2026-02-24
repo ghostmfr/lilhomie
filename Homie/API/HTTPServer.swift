@@ -213,7 +213,7 @@ class HTTPServer {
                 if let updated = homeKitManager.getDevice(byId: device.id) {
                     return jsonResponse(["success": true, "device": deviceToDict(updated)])
                 }
-                return jsonResponse(["success": true])
+                return errorResponse(500, "Device state updated but could not be read back")
             }
             return errorResponse(500, "Failed to toggle device")
         }
@@ -249,7 +249,7 @@ class HTTPServer {
                 if let updated = homeKitManager.getDevice(byId: device.id) {
                     return jsonResponse(["success": true, "device": deviceToDict(updated)])
                 }
-                return jsonResponse(["success": true])
+                return errorResponse(500, "Device state updated but could not be read back")
             }
             return errorResponse(500, "Failed to turn device on")
         }
@@ -285,7 +285,7 @@ class HTTPServer {
                 if let updated = homeKitManager.getDevice(byId: device.id) {
                     return jsonResponse(["success": true, "device": deviceToDict(updated)])
                 }
-                return jsonResponse(["success": true])
+                return errorResponse(500, "Device state updated but could not be read back")
             }
             return errorResponse(500, "Failed to turn device off")
         }
@@ -315,7 +315,7 @@ class HTTPServer {
                 if let updated = homeKitManager.getDevice(byId: device.id) {
                     return jsonResponse(["success": true, "device": deviceToDict(updated)])
                 }
-                return jsonResponse(["success": true])
+                return errorResponse(500, "Device state updated but could not be read back")
             }
             return errorResponse(500, "Failed to set device state")
         }
@@ -371,7 +371,16 @@ class HTTPServer {
             }
             
             _ = group.wait(timeout: .now() + 10)
-            return jsonResponse(["success": true, "room": roomName, "devicesChanged": successCount])
+            
+            let updatedDevices = homeKitManager.devices.filter {
+                $0.roomName?.lowercased() == roomName.lowercased()
+            }
+            return jsonResponse([
+                "success": true,
+                "room": roomName,
+                "devicesChanged": successCount,
+                "devices": updatedDevices.map { deviceToDict($0) }
+            ])
         }
         
         if method == "POST" && path.hasPrefix("/room/") && path.hasSuffix("/off") && !path.contains("/device/") {
@@ -395,7 +404,16 @@ class HTTPServer {
             }
             
             _ = group.wait(timeout: .now() + 10)
-            return jsonResponse(["success": true, "room": roomName, "devicesChanged": successCount])
+            
+            let updatedDevices = homeKitManager.devices.filter {
+                $0.roomName?.lowercased() == roomName.lowercased()
+            }
+            return jsonResponse([
+                "success": true,
+                "room": roomName,
+                "devicesChanged": successCount,
+                "devices": updatedDevices.map { deviceToDict($0) }
+            ])
         }
         
         // Room-scoped device control: /room/{room}/device/{device}/...
@@ -446,7 +464,7 @@ class HTTPServer {
                     if let updated = homeKitManager.getDevice(byId: device.id) {
                         return jsonResponse(["success": true, "device": deviceToDict(updated)])
                     }
-                    return jsonResponse(["success": true])
+                    return errorResponse(500, "Device state updated but could not be read back")
                 }
                 return errorResponse(500, "Failed to toggle device")
             }
@@ -464,9 +482,9 @@ class HTTPServer {
                     if let updated = homeKitManager.getDevice(byId: device.id) {
                         return jsonResponse(["success": true, "device": deviceToDict(updated)])
                     }
-                    return jsonResponse(["success": true])
+                    return errorResponse(500, "Device state updated but could not be read back")
                 }
-                return errorResponse(500, "Failed to turn device on")
+                return errorResponse(500, "Failed to set device on")
             }
             
             // POST /room/{room}/device/{device}/off
@@ -482,9 +500,9 @@ class HTTPServer {
                     if let updated = homeKitManager.getDevice(byId: device.id) {
                         return jsonResponse(["success": true, "device": deviceToDict(updated)])
                     }
-                    return jsonResponse(["success": true])
+                    return errorResponse(500, "Device state updated but could not be read back")
                 }
-                return errorResponse(500, "Failed to turn device off")
+                return errorResponse(500, "Failed to set device off")
             }
             
             // POST /room/{room}/device/{device}/set
@@ -498,7 +516,10 @@ class HTTPServer {
                     semaphore.signal()
                 }
                 _ = semaphore.wait(timeout: .now() + 10)
-                return success ? jsonResponse(["success": true]) : errorResponse(500, "Failed")
+                if success, let updated = homeKitManager.getDevice(byId: device.id) {
+                    return jsonResponse(["success": true, "device": deviceToDict(updated)])
+                }
+                return errorResponse(500, "Failed to set device state")
             }
             
             return errorResponse(400, "Unknown action '\(action ?? "")'")
