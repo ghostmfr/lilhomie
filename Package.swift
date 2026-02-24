@@ -7,12 +7,12 @@ let package = Package(
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "hkctl", targets: ["hkctl"])
+        .executable(name: "lilhomie", targets: ["lilhomie"])
     ],
     targets: [
         .executableTarget(
-            name: "hkctl",
-            path: "hkctl"
+            name: "lilhomie",
+            path: "lilhomie-cli"
         )
     ]
 )
