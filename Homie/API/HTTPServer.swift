@@ -217,6 +217,78 @@ class HTTPServer {
             }
             return errorResponse(500, "Failed to toggle device")
         }
+
+        if method == "POST" && path.hasSuffix("/on") && !path.contains("/room/") {
+            let pathWithoutOn = String(path.dropLast("/on".count))
+            let id = normalizeName(String(pathWithoutOn.dropFirst("/device/".count)))
+            NSLog("[HTTP] Turn device on: '\(id)'")
+
+            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
+                let suggestions = homeKitManager.devices
+                    .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
+                    .prefix(3)
+                    .map { $0.name }
+                if suggestions.isEmpty {
+                    return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
+                } else {
+                    return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
+                }
+            }
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var success = false
+
+            homeKitManager.setDeviceState(device, on: true, brightness: nil) { result in
+                success = result
+                semaphore.signal()
+            }
+
+            _ = semaphore.wait(timeout: .now() + 10)
+
+            if success {
+                if let updated = homeKitManager.getDevice(byId: device.id) {
+                    return jsonResponse(["success": true, "device": deviceToDict(updated)])
+                }
+                return jsonResponse(["success": true])
+            }
+            return errorResponse(500, "Failed to turn device on")
+        }
+
+        if method == "POST" && path.hasSuffix("/off") && !path.contains("/room/") {
+            let pathWithoutOff = String(path.dropLast("/off".count))
+            let id = normalizeName(String(pathWithoutOff.dropFirst("/device/".count)))
+            NSLog("[HTTP] Turn device off: '\(id)'")
+
+            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
+                let suggestions = homeKitManager.devices
+                    .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
+                    .prefix(3)
+                    .map { $0.name }
+                if suggestions.isEmpty {
+                    return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
+                } else {
+                    return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
+                }
+            }
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var success = false
+
+            homeKitManager.setDeviceState(device, on: false, brightness: nil) { result in
+                success = result
+                semaphore.signal()
+            }
+
+            _ = semaphore.wait(timeout: .now() + 10)
+
+            if success {
+                if let updated = homeKitManager.getDevice(byId: device.id) {
+                    return jsonResponse(["success": true, "device": deviceToDict(updated)])
+                }
+                return jsonResponse(["success": true])
+            }
+            return errorResponse(500, "Failed to turn device off")
+        }
         
         if method == "POST" && path.hasSuffix("/set") && !path.contains("/room/") {
             let pathWithoutSet = String(path.dropLast("/set".count))
@@ -388,7 +460,13 @@ class HTTPServer {
                     semaphore.signal()
                 }
                 _ = semaphore.wait(timeout: .now() + 10)
-                return success ? jsonResponse(["success": true]) : errorResponse(500, "Failed")
+                if success {
+                    if let updated = homeKitManager.getDevice(byId: device.id) {
+                        return jsonResponse(["success": true, "device": deviceToDict(updated)])
+                    }
+                    return jsonResponse(["success": true])
+                }
+                return errorResponse(500, "Failed to turn device on")
             }
             
             // POST /room/{room}/device/{device}/off
@@ -400,7 +478,13 @@ class HTTPServer {
                     semaphore.signal()
                 }
                 _ = semaphore.wait(timeout: .now() + 10)
-                return success ? jsonResponse(["success": true]) : errorResponse(500, "Failed")
+                if success {
+                    if let updated = homeKitManager.getDevice(byId: device.id) {
+                        return jsonResponse(["success": true, "device": deviceToDict(updated)])
+                    }
+                    return jsonResponse(["success": true])
+                }
+                return errorResponse(500, "Failed to turn device off")
             }
             
             // POST /room/{room}/device/{device}/set

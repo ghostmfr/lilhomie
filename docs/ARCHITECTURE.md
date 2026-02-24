@@ -122,7 +122,11 @@ GET  /health              # Health check
 GET  /devices             # List all devices
 GET  /device/:id          # Get device state
 POST /device/:id/toggle   # Toggle device
+POST /device/:id/on       # Turn device on
+POST /device/:id/off      # Turn device off
 POST /device/:id/set      # Set state {on, brightness}
+POST /room/:r/device/:d/on   # Turn room-scoped device on
+POST /room/:r/device/:d/off  # Turn room-scoped device off
 GET  /scenes              # List scenes
 POST /scene/:id/trigger   # Trigger scene
 GET  /rules               # List app-aware rules

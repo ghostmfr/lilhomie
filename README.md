@@ -91,6 +91,10 @@ curl localhost:8420/device/Desk_Lamp
 # Toggle
 curl -X POST localhost:8420/device/Desk_Lamp/toggle
 
+# Explicit on/off
+curl -X POST localhost:8420/device/Desk_Lamp/on
+curl -X POST localhost:8420/device/Desk_Lamp/off
+
 # Set brightness
 curl -X POST localhost:8420/device/Desk_Lamp/set \
   -H "Content-Type: application/json" \
@@ -109,6 +113,10 @@ curl localhost:8420/room/Office
 # Room on/off
 curl -X POST localhost:8420/room/Office/on
 curl -X POST localhost:8420/room/Office/off
+
+# Room-scoped device on/off
+curl -X POST localhost:8420/room/Office/device/Desk_Lamp/on
+curl -X POST localhost:8420/room/Office/device/Desk_Lamp/off
 ```
 
 ### Scenes

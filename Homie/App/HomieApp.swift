@@ -314,6 +314,8 @@ struct ContentView: View {
                 endpointRow("GET", "/device/{name}", "Get device state", nil)
                 endpointRow("GET", "/device/{name}/schema", "JSON schema", nil)
                 endpointRow("POST", "/device/{name}/toggle", "Toggle on/off", nil)
+                endpointRow("POST", "/device/{name}/on", "Turn on", nil)
+                endpointRow("POST", "/device/{name}/off", "Turn off", nil)
                 endpointRow("POST", "/device/{name}/set", "Set state", #"{"on": bool, "brightness": 0-100}"#)
                 endpointRow("GET", "/rooms", "List all rooms", nil)
                 endpointRow("GET", "/room/{name}", "Devices in room", nil)
