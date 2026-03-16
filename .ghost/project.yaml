@@ -1,3 +1,17 @@
-org: ghostmfr
-repo: lilhomie
-project: ghost-operations
+name: lilhomie — HomeKit CLI
+status: active
+type: side-project
+
+slack_channel: C0AKF8RNDM3
+github_repo: ghostmfr/lilhomie
+obsidian_folder: projects/homekit-cli
+
+client: null
+owner: garrett
+description: HomeKit control via CLI and API.
+lcm_tags:
+  - homekit
+  - lilhomie
+  - cli
+
+memory_note: projects/homekit-cli
