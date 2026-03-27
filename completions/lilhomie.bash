@@ -12,7 +12,7 @@ _lilhomie_completions() {
         prev="${COMP_WORDS[COMP_CWORD-1]}"
     }
 
-    local commands="list ls devices scenes status get toggle on off set scene info status-all help"
+local subcommands="list ls devices scenes status get toggle on off set scene info dash dashboard help"
     local global_flags="--json -j --help -h"
 
     # First argument: complete subcommands and global flags

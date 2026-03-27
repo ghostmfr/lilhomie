@@ -20,7 +20,7 @@ complete -c lilhomie -l help  -s h -d 'Show help message'
 # ---------------------------------------------------------------------------
 function __lilhomie_subcommand
     set -l cmd (commandline -opc)
-    set -l subcmds list ls devices scenes status get toggle on off set scene info status-all help
+    set -l subcmds list ls devices scenes status get toggle on off set scene info status-all dash dashboard help
     # Skip the program name (index 1) and check remaining tokens
     for word in $cmd[2..]
         if contains -- $word $subcmds
@@ -56,6 +56,8 @@ complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a set        -d 'Set de
 complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a scene      -d 'Trigger a scene'
 complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a info       -d 'Show Homie app status'
 complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a status-all -d 'Alias for info'
+complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a dash        -d 'Interactive TUI dashboard'
+complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a dashboard   -d 'Alias for dash'
 complete -c lilhomie -n '__fish_lilhomie_no_subcommand' -a help       -d 'Show help message'
 
 # ---------------------------------------------------------------------------

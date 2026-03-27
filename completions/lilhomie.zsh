@@ -37,6 +37,8 @@ _lilhomie() {
         'scene:Trigger a scene'
         'info:Show Homie app status'
         'status-all:Alias for info'
+        'dash:Interactive TUI dashboard'
+        'dashboard:Alias for dash'
         'help:Show help message'
     )
 
@@ -59,7 +61,7 @@ _lilhomie() {
 
     # Complete flags and arguments for each subcommand
     case "${cmd}" in
-        list|ls|devices|scenes|info|status-all|help)
+        list|ls|devices|scenes|info|status-all|dash|dashboard|help)
             _arguments $global_flags
             ;;
         status|get|toggle|on|off)

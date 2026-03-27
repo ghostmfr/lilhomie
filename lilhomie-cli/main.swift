@@ -297,6 +297,7 @@ func printUsage() {
       lilhomie set <name> <0-100>      Set brightness level
       lilhomie scene <name>            Trigger a scene
       lilhomie info                    Show Homie status
+      lilhomie dash                    Interactive TUI dashboard
 
     Global flags:
       --json, -j                       Output raw JSON (great for piping into jq)
@@ -373,6 +374,9 @@ case "scene":
 case "info", "status-all":
     showStatus(jsonOutput: jsonOutput)
     
+case "dash", "dashboard":
+    Dashboard().run()
+
 case "help", "-h", "--help":
     printUsage()
     
