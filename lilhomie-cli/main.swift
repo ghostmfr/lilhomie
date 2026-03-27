@@ -36,6 +36,21 @@ struct ActionResponse: Codable {
     let error: String?
 }
 
+// MARK: - Argument Parsing
+
+/// Strip `--json` / `-j` flags from args and return the cleaned args + flag state.
+func parseGlobalFlags(_ rawArgs: [String]) -> (args: [String], jsonOutput: Bool) {
+    var jsonOutput = false
+    let filtered = rawArgs.filter { arg in
+        if arg == "--json" || arg == "-j" {
+            jsonOutput = true
+            return false
+        }
+        return true
+    }
+    return (filtered, jsonOutput)
+}
+
 // MARK: - HTTP Client
 
 func request(_ method: String, _ path: String, body: [String: Any]? = nil) -> Data? {
@@ -62,12 +77,35 @@ func request(_ method: String, _ path: String, body: [String: Any]? = nil) -> Da
     return result
 }
 
+/// Pretty-print raw JSON data to stdout.
+func printJSON(_ data: Data) {
+    if let obj = try? JSONSerialization.jsonObject(with: data),
+       let pretty = try? JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted),
+       let str = String(data: pretty, encoding: .utf8) {
+        print(str)
+    } else if let str = String(data: data, encoding: .utf8) {
+        // Fall back to raw bytes if we can't pretty-print
+        print(str)
+    } else {
+        print("{}")
+    }
+}
+
 // MARK: - Commands
 
-func listDevices() {
-    guard let data = request("GET", "/devices"),
-          let response = try? JSONDecoder().decode(DevicesResponse.self, from: data) else {
+func listDevices(jsonOutput: Bool = false) {
+    guard let data = request("GET", "/devices") else {
         print("❌ Failed to connect to Homie. Is the app running?")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let response = try? JSONDecoder().decode(DevicesResponse.self, from: data) else {
+        print("❌ Failed to parse devices response")
         exit(1)
     }
     
@@ -93,10 +131,19 @@ func listDevices() {
     print("Total: \(response.devices.count) devices")
 }
 
-func listScenes() {
-    guard let data = request("GET", "/scenes"),
-          let response = try? JSONDecoder().decode(ScenesResponse.self, from: data) else {
+func listScenes(jsonOutput: Bool = false) {
+    guard let data = request("GET", "/scenes") else {
         print("❌ Failed to connect to Homie. Is the app running?")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let response = try? JSONDecoder().decode(ScenesResponse.self, from: data) else {
+        print("❌ Failed to parse scenes response")
         exit(1)
     }
     
@@ -112,10 +159,19 @@ func listScenes() {
     print("\nTotal: \(response.scenes.count) scenes")
 }
 
-func getStatus(_ name: String) {
+func getStatus(_ name: String, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("GET", "/device/\(encoded)"),
-          let device = try? JSONDecoder().decode(Device.self, from: data) else {
+    guard let data = request("GET", "/device/\(encoded)") else {
+        print("❌ Device '\(name)' not found")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let device = try? JSONDecoder().decode(Device.self, from: data) else {
         print("❌ Device '\(name)' not found")
         exit(1)
     }
@@ -130,10 +186,19 @@ func getStatus(_ name: String) {
     }
 }
 
-func toggleDevice(_ name: String) {
+func toggleDevice(_ name: String, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/device/\(encoded)/toggle"),
-          let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
+    guard let data = request("POST", "/device/\(encoded)/toggle") else {
+        print("❌ Failed to toggle '\(name)'")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
         print("❌ Failed to toggle '\(name)'")
         exit(1)
     }
@@ -150,10 +215,19 @@ func toggleDevice(_ name: String) {
     }
 }
 
-func setDevice(_ name: String, on: Bool) {
+func setDevice(_ name: String, on: Bool, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/device/\(encoded)/set", body: ["on": on]),
-          let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
+    guard let data = request("POST", "/device/\(encoded)/set", body: ["on": on]) else {
+        print("❌ Failed to set '\(name)'")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
         print("❌ Failed to set '\(name)'")
         exit(1)
     }
@@ -166,10 +240,19 @@ func setDevice(_ name: String, on: Bool) {
     }
 }
 
-func setBrightness(_ name: String, _ level: Int) {
+func setBrightness(_ name: String, _ level: Int, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/device/\(encoded)/set", body: ["on": true, "brightness": level]),
-          let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
+    guard let data = request("POST", "/device/\(encoded)/set", body: ["on": true, "brightness": level]) else {
+        print("❌ Failed to set brightness for '\(name)'")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
         print("❌ Failed to set brightness for '\(name)'")
         exit(1)
     }
@@ -182,10 +265,19 @@ func setBrightness(_ name: String, _ level: Int) {
     }
 }
 
-func triggerScene(_ name: String) {
+func triggerScene(_ name: String, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/scene/\(encoded)/trigger"),
-          let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
+    guard let data = request("POST", "/scene/\(encoded)/trigger") else {
+        print("❌ Failed to trigger scene '\(name)'")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
         print("❌ Failed to trigger scene '\(name)'")
         exit(1)
     }
@@ -198,9 +290,18 @@ func triggerScene(_ name: String) {
     }
 }
 
-func showStatus() {
-    guard let data = request("GET", "/debug"),
-          let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+func showStatus(jsonOutput: Bool = false) {
+    guard let data = request("GET", "/debug") else {
+        print("❌ Failed to connect to Homie. Is the app running?")
+        exit(1)
+    }
+
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+
+    guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
         print("❌ Failed to connect to Homie. Is the app running?")
         exit(1)
     }
@@ -219,7 +320,7 @@ func showStatus() {
 func printUsage() {
     print("""
     lilhomie - Homie CLI
-    
+
     Usage:
       lilhomie list                    List all devices (grouped by room)
       lilhomie scenes                  List all scenes
@@ -230,21 +331,23 @@ func printUsage() {
       lilhomie set <name> <0-100>      Set brightness level
       lilhomie scene <name>            Trigger a scene
       lilhomie info                    Show Homie status
-      lilhomie help                    Show this help
-    
-    Device/scene names support fuzzy matching.
-    
+
+    Global flags:
+      --json, -j                       Output raw JSON (great for piping into jq)
+
     Examples:
       lilhomie toggle "Office Lamp"
       lilhomie on office
       lilhomie set kitchen 50
       lilhomie scene "Good Night"
+      lilhomie list --json | jq '.devices[] | select(.isOn) | .name'
+      lilhomie status "Desk Lamp" -j
     """)
 }
 
 // MARK: - Main
 
-let args = Array(CommandLine.arguments.dropFirst())
+let (args, jsonOutput) = parseGlobalFlags(Array(CommandLine.arguments.dropFirst()))
 
 guard !args.isEmpty else {
     printUsage()
@@ -253,38 +356,38 @@ guard !args.isEmpty else {
 
 switch args[0].lowercased() {
 case "list", "ls", "devices":
-    listDevices()
+    listDevices(jsonOutput: jsonOutput)
     
 case "scenes":
-    listScenes()
+    listScenes(jsonOutput: jsonOutput)
     
 case "status", "get":
     guard args.count > 1 else {
         print("Usage: lilhomie status <device-name>")
         exit(1)
     }
-    getStatus(args[1...].joined(separator: " "))
+    getStatus(args[1...].joined(separator: " "), jsonOutput: jsonOutput)
     
 case "toggle":
     guard args.count > 1 else {
         print("Usage: lilhomie toggle <device-name>")
         exit(1)
     }
-    toggleDevice(args[1...].joined(separator: " "))
+    toggleDevice(args[1...].joined(separator: " "), jsonOutput: jsonOutput)
     
 case "on":
     guard args.count > 1 else {
         print("Usage: lilhomie on <device-name>")
         exit(1)
     }
-    setDevice(args[1...].joined(separator: " "), on: true)
+    setDevice(args[1...].joined(separator: " "), on: true, jsonOutput: jsonOutput)
     
 case "off":
     guard args.count > 1 else {
         print("Usage: lilhomie off <device-name>")
         exit(1)
     }
-    setDevice(args[1...].joined(separator: " "), on: false)
+    setDevice(args[1...].joined(separator: " "), on: false, jsonOutput: jsonOutput)
     
 case "set":
     guard args.count > 2, let level = Int(args.last!) else {
@@ -292,17 +395,17 @@ case "set":
         exit(1)
     }
     let name = args[1..<(args.count-1)].joined(separator: " ")
-    setBrightness(name, max(0, min(100, level)))
+    setBrightness(name, max(0, min(100, level)), jsonOutput: jsonOutput)
     
 case "scene":
     guard args.count > 1 else {
         print("Usage: lilhomie scene <scene-name>")
         exit(1)
     }
-    triggerScene(args[1...].joined(separator: " "))
+    triggerScene(args[1...].joined(separator: " "), jsonOutput: jsonOutput)
     
 case "info", "status-all":
-    showStatus()
+    showStatus(jsonOutput: jsonOutput)
     
 case "help", "-h", "--help":
     printUsage()
