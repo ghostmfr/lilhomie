@@ -12,6 +12,7 @@
   <img src="https://img.shields.io/badge/platform-macOS%2013%2B-blue" alt="Platform">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
   <img src="https://img.shields.io/github/v/release/ghostmfr/lilhomie" alt="Release">
+  <img src="https://github.com/ghostmfr/lilhomie/actions/workflows/ci.yml/badge.svg" alt="CI">
 </p>
 
 ---
