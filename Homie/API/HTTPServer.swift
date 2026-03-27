@@ -3,12 +3,12 @@ import Network
 
 class HTTPServer {
     private var listener: NWListener?
-    private let homeKitManager: HomeKitManager
+    private let homeKitManager: HomeKitManagerProtocol
     private let ruleEngine: RuleEngine
     private let homieState: HomieState
     private let port: UInt16 = 8420
     
-    init(homeKitManager: HomeKitManager, ruleEngine: RuleEngine, homieState: HomieState) {
+    init(homeKitManager: HomeKitManagerProtocol, ruleEngine: RuleEngine, homieState: HomieState) {
         self.homeKitManager = homeKitManager
         self.ruleEngine = ruleEngine
         self.homieState = homieState
@@ -68,7 +68,7 @@ class HTTPServer {
         }
     }
     
-    private func handleRequest(_ request: String) -> String {
+    func handleRequest(_ request: String) -> String {
         let lines = request.components(separatedBy: "\r\n")
         guard let firstLine = lines.first else {
             return errorResponse(400, "Bad request")
@@ -94,7 +94,7 @@ class HTTPServer {
         return route(method: method, path: path, body: body)
     }
     
-    private func route(method: String, path: String, body: [String: Any]?) -> String {
+    func route(method: String, path: String, body: [String: Any]? = nil) -> String {
         NSLog("[HTTP] \(method) \(path)")
         homieState.incrementRequestCount()
         
@@ -111,11 +111,11 @@ class HTTPServer {
         }
         
         if path == "/debug" {
-            let homes = homeKitManager.homeManager.homes
-            let authStatus = homeKitManager.homeManager.authorizationStatus.rawValue
+            let authStatus = homeKitManager.homeManagerAuthStatus
+            let homesCount = homeKitManager.homeManagerHomesCount
             return jsonResponse([
                 "authStatus": authStatus,
-                "homesCount": homes.count,
+                "homesCount": homesCount,
                 "devicesLoaded": homeKitManager.devices.count,
                 "scenesLoaded": homeKitManager.scenes.count,
                 "activeRules": Array(ruleEngine.activeRules)

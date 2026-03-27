@@ -50,8 +50,10 @@ targets:
     sources:
       - path: Homie/HomeKit
       - path: Homie/Context/RuleEngine.swift
+      - path: Homie/Context/AppMonitor.swift
       - path: Homie/API
       - path: Homie/UI/Character
+      - path: Homie/App/HomieState.swift
       - path: HomieMac
     entitlements:
       path: HomieMac/HomieMac.entitlements
@@ -78,4 +80,28 @@ targets:
       - framework: ServiceManagement.framework
         embed: false
       - framework: AppKit.framework
+        embed: false
+
+  # Unit test target
+  HomieTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+        excludes:
+          - "*.sh"
+      - path: Homie/HomeKit
+      - path: Homie/Context/RuleEngine.swift
+      - path: Homie/Context/AppMonitor.swift
+      - path: Homie/API
+      - path: Homie/UI/Character
+      - path: Homie/App/HomieState.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.homie.mac.tests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - framework: HomeKit.framework
+        embed: false
+      - framework: Network.framework
         embed: false

@@ -6,19 +6,29 @@ class RuleEngine: ObservableObject {
     @Published var rules: [HomieRule] = []
     @Published var activeRules: Set<String> = []  // Rule IDs currently active
     
-    private let homeKitManager: HomeKitManager
+    private let homeKitManager: HomeKitManagerProtocol
     private var previousStates: [String: [String: Any]] = [:]  // For reverting
     
-    private let rulesURL: URL = {
+    private let rulesURL: URL
+
+    private static func defaultRulesURL() -> URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let homieDir = appSupport.appendingPathComponent("Homie")
         try? FileManager.default.createDirectory(at: homieDir, withIntermediateDirectories: true)
         return homieDir.appendingPathComponent("rules.json")
-    }()
-    
-    init(homeKitManager: HomeKitManager) {
+    }
+
+    /// Production init — loads rules from the standard Application Support path.
+    init(homeKitManager: HomeKitManagerProtocol) {
         self.homeKitManager = homeKitManager
+        self.rulesURL = RuleEngine.defaultRulesURL()
         loadRules()
+    }
+
+    /// Testable init — uses a custom rulesURL so tests don't touch the real file system.
+    init(homeKitManager: HomeKitManagerProtocol, rulesURL: URL) {
+        self.homeKitManager = homeKitManager
+        self.rulesURL = rulesURL
     }
     
     // MARK: - Rule Evaluation
