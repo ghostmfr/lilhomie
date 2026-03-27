@@ -22,6 +22,33 @@ protocol HomeKitManagerProtocol: AnyObject {
     var homeManagerAuthStatus: Int { get }
 }
 
+// MARK: - Default lookup implementations
+//
+// These default implementations live here so that every conformer (including
+// mocks) gets correct, non-duplicated lookup behaviour for free.
+// Concrete types such as HomeKitManager can override with richer strategies
+// (e.g. fuzzy word matching) without losing the shared baseline.
+
+extension HomeKitManagerProtocol {
+    func getDevice(byId id: String) -> HomeDevice? {
+        devices.first { $0.id == id }
+    }
+
+    func getDevice(byName name: String) -> HomeDevice? {
+        let lower = name.lowercased()
+        if let exact = devices.first(where: { $0.name.lowercased() == lower }) { return exact }
+        return devices.first { $0.name.lowercased().contains(lower) }
+    }
+
+    func getScene(byId id: String) -> HomeScene? {
+        scenes.first { $0.id == id }
+    }
+
+    func getScene(byName name: String) -> HomeScene? {
+        scenes.first { $0.name.lowercased().contains(name.lowercased()) }
+    }
+}
+
 // MARK: - HomeKitManager conformance
 
 extension HomeKitManager: HomeKitManagerProtocol {

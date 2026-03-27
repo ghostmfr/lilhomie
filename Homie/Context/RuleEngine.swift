@@ -1,6 +1,20 @@
 import Foundation
 import Combine
 
+// MARK: - Clock protocol (enables deterministic time injection in tests)
+
+/// Abstracts the concept of "current time" so that time-dependent logic can be
+/// tested without flakiness caused by the real wall clock.
+protocol Clock {
+    /// Returns the current point in time.
+    var now: Date { get }
+}
+
+/// Production clock — delegates straight to the system wall clock.
+struct SystemClock: Clock {
+    var now: Date { Date() }
+}
+
 /// Evaluates app-aware rules and triggers HomeKit actions
 class RuleEngine: ObservableObject {
     @Published var rules: [HomieRule] = []
@@ -8,7 +22,8 @@ class RuleEngine: ObservableObject {
     
     private let homeKitManager: HomeKitManagerProtocol
     private var previousStates: [String: [String: Any]] = [:]  // For reverting
-    
+    private let clock: Clock
+
     private let rulesURL: URL
 
     private static func defaultRulesURL() -> URL {
@@ -19,16 +34,20 @@ class RuleEngine: ObservableObject {
     }
 
     /// Production init — loads rules from the standard Application Support path.
-    init(homeKitManager: HomeKitManagerProtocol) {
+    init(homeKitManager: HomeKitManagerProtocol, clock: Clock = SystemClock()) {
         self.homeKitManager = homeKitManager
+        self.clock = clock
         self.rulesURL = RuleEngine.defaultRulesURL()
         loadRules()
     }
 
     /// Testable init — uses a custom rulesURL so tests don't touch the real file system.
-    init(homeKitManager: HomeKitManagerProtocol, rulesURL: URL) {
+    /// Calls `loadRules()` for consistency with the production initialiser.
+    init(homeKitManager: HomeKitManagerProtocol, rulesURL: URL, clock: Clock = SystemClock()) {
         self.homeKitManager = homeKitManager
         self.rulesURL = rulesURL
+        self.clock = clock
+        loadRules()
     }
     
     // MARK: - Rule Evaluation
@@ -60,7 +79,7 @@ class RuleEngine: ObservableObject {
         
         // Check time range (if specified)
         if let timeRange = rule.conditions.timeRange {
-            let now = Date()
+            let now = clock.now
             let calendar = Calendar.current
             let hour = calendar.component(.hour, from: now)
             let minute = calendar.component(.minute, from: now)

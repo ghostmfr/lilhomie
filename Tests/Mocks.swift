@@ -9,6 +9,10 @@ import Foundation
 // MARK: - MockHomeKitManager
 
 /// A fully controllable mock of HomeKitManagerProtocol.
+///
+/// Lookup methods (getDevice/getScene by id/name) are intentionally **not**
+/// reimplemented here — they are inherited from the default implementations in
+/// HomeKitManagerProtocol, keeping this mock free of duplicated logic.
 final class MockHomeKitManager: HomeKitManagerProtocol {
 
     // MARK: State
@@ -31,31 +35,10 @@ final class MockHomeKitManager: HomeKitManagerProtocol {
     var setStateResult: Bool = true
     var triggerSceneResult: Bool = true
 
-    // MARK: Protocol
-
-    func getDevice(byId id: String) -> HomeDevice? {
-        devices.first { $0.id == id }
-    }
-
-    func getDevice(byName name: String) -> HomeDevice? {
-        let lower = name.lowercased()
-        if let exact = devices.first(where: { $0.name.lowercased() == lower }) {
-            return exact
-        }
-        if let contains = devices.first(where: { $0.name.lowercased().contains(lower) }) {
-            return contains
-        }
-        return nil
-    }
-
-    func getScene(byId id: String) -> HomeScene? {
-        scenes.first { $0.id == id }
-    }
-
-    func getScene(byName name: String) -> HomeScene? {
-        let lower = name.lowercased()
-        return scenes.first { $0.name.lowercased().contains(lower) }
-    }
+    // MARK: Protocol — mutating operations
+    //
+    // Lookup operations (getDevice / getScene) are provided by the default
+    // implementations on HomeKitManagerProtocol and are not repeated here.
 
     func toggleDevice(_ device: HomeDevice, completion: @escaping (Bool) -> Void) {
         // Flip the device's isOn state in the devices array
@@ -86,6 +69,27 @@ final class MockHomeKitManager: HomeKitManagerProtocol {
         triggerSceneIdCalls.append((id: id, result: triggerSceneResult))
         completion(triggerSceneResult)
     }
+}
+
+// MARK: - FixedClock
+
+/// A deterministic `Clock` implementation for use in tests.
+/// Inject a specific `Date` to make time-range condition tests completely
+/// predictable and immune to flakiness.
+struct FixedClock: Clock {
+    let fixedDate: Date
+
+    /// Convenience initialiser: build a date from an hour and minute in the
+    /// current calendar so tests read as "09:30 o'clock".
+    init(hour: Int, minute: Int) {
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        components.hour = hour
+        components.minute = minute
+        components.second = 0
+        fixedDate = Calendar.current.date(from: components) ?? Date()
+    }
+
+    var now: Date { fixedDate }
 }
 
 // MARK: - Test Fixtures
