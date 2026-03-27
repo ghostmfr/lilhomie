@@ -35,5 +35,9 @@ jobs:
             CODE_SIGNING_ALLOWED=NO
 
       - name: Run API tests
-        continue-on-error: true
-        run: bash Tests/api_test.sh
+        run: |
+          if curl -s --connect-timeout 2 http://127.0.0.1:8420/health > /dev/null 2>&1; then
+            bash Tests/api_test.sh
+          else
+            echo "No Homie server running at 127.0.0.1:8420 — skipping API tests in CI (tests require a live server)."
+          fi
