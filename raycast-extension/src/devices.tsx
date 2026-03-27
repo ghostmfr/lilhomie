@@ -69,12 +69,10 @@ export default function Command() {
   }
 
   function getAccessories(device: Device): List.Item.Accessory[] {
-    const accessories: List.Item.Accessory[] = [];
-    if (device.brightness !== undefined && device.isOn) {
-      accessories.push({ text: `${device.brightness}%` });
-    }
-    accessories.push({ text: device.isOn ? "ON" : "OFF" });
-    return accessories;
+    return [
+      device.brightness !== undefined && device.isOn ? { text: `${device.brightness}%` } : null,
+      { text: device.isOn ? "ON" : "OFF" },
+    ].filter((a): a is List.Item.Accessory => a !== null);
   }
 
   return (
