@@ -1,53 +1,54 @@
-# Homie for Raycast
+# lilhomie for Raycast
 
-Control your HomeKit devices directly from Raycast.
+Control your HomeKit devices and scenes directly from Raycast using the [lilhomie](https://github.com/ghostmfr/lilhomie) macOS app.
 
-## Prerequisites
+## Requirements
 
-- [Homie](https://github.com/ghostmfr/Homie) app running on your Mac
-- Raycast installed
-
-## Installation
-
-1. Clone this extension or download it
-2. Open Raycast → Extensions → Import Extension
-3. Select the `raycast-extension` folder
-
-Or install via npm:
-
-```bash
-cd raycast-extension
-npm install
-npm run dev
-```
+- **lilhomie** macOS app must be running (it exposes a local HTTP API on port 8420)
+- Raycast installed on macOS
 
 ## Commands
 
 ### List Devices
-Show all your HomeKit devices with their current state. Filter by room.
+Browse all your HomeKit devices with their current on/off state and brightness. Filter by room using the dropdown. Toggle devices or set brightness presets (25%, 50%, 75%, 100%) directly from the list.
 
 ### Toggle Device
-Search and toggle any device on/off.
+Search for a device by name or room and toggle it on or off. Accepts an optional pre-filled device name argument so you can create Quicklinks for specific devices.
 
 ### Scenes
-View and trigger HomeKit scenes.
+View all your HomeKit scenes and trigger them with a single keypress. Scenes are grouped by home and show how many actions they contain.
 
-### Quick Toggle (no-view)
-Instantly toggle a device by name without opening a window.
+### Quick Toggle _(no-view)_
+Instantly toggle a device without opening any window. Type the device name as an argument and get a HUD confirmation. Perfect for assigning hotkeys to frequently toggled devices.
 
-**Usage:** Type `homie quick-toggle` followed by a device name.
+**Example:** Set up a Raycast hotkey for `Quick Toggle` with argument `desk lamp` to toggle your desk lamp with a single keystroke.
 
-Example: `homie quick-toggle office lamp`
+## Setup
 
-## Configuration
+1. Install and launch the **lilhomie** macOS app
+2. In Raycast, go to **Extensions → Import Extension** and select the `raycast-extension` folder, **or** install from the Raycast Store
+3. Search for any of the commands above in Raycast
 
-The extension connects to Homie's HTTP API at `http://127.0.0.1:8420`.
+The extension connects to `http://127.0.0.1:8420` — no configuration needed as long as lilhomie is running.
 
-Make sure Homie is running before using the extension.
+## Troubleshooting
+
+**"lilhomie Not Reachable" error**
+- Make sure the lilhomie macOS app is open and running in the menu bar
+- Check that nothing else is using port 8420
+
+**Device not found (Quick Toggle)**
+- Device names are matched case-insensitively; partial matches work (e.g., `lamp` matches `Desk Lamp`)
+- Use the List Devices command to see exact device names
+
+## Store Assets Note
+
+> ⚠️ `extension-icon.png` (512×512) and store screenshots are required for Raycast Store submission but are not yet included in this repository. See issue #17.
 
 ## Development
 
 ```bash
+cd raycast-extension
 npm install
 npm run dev
 ```
