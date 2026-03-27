@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build HomieMac (native macOS)
+        run: |
+          xcodebuild -project Homie.xcodeproj \
+            -scheme HomieMac \
+            -destination 'platform=macOS' \
+            build \
+            CODE_SIGN_IDENTITY='' \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Build Homie (Mac Catalyst)
+        run: |
+          xcodebuild -project Homie.xcodeproj \
+            -scheme Homie \
+            -destination 'platform=macOS,variant=Mac Catalyst' \
+            build \
+            CODE_SIGN_IDENTITY='' \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run API tests
+        continue-on-error: true
+        run: bash Tests/api_test.sh
