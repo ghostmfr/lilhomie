@@ -9,17 +9,21 @@ interface Arguments {
 export default function Command(props: { arguments: Arguments }) {
   const [devices, setDevices] = useState<Device[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState(props.arguments.device || "");
 
   async function loadDevices() {
+    setIsLoading(true);
+    setError(null);
     try {
       const data = await getDevices();
       setDevices(data);
-    } catch (error) {
+    } catch (err) {
+      setError("Could not connect to lilhomie. Is the app running?");
       showToast({
         style: Toast.Style.Failure,
         title: "Failed to load devices",
-        message: "Is Homie running?",
+        message: "Is lilhomie running?",
       });
     } finally {
       setIsLoading(false);
@@ -46,11 +50,11 @@ export default function Command(props: { arguments: Arguments }) {
         title: `${device.name} → ${device.isOn ? "OFF" : "ON"}`,
       });
       loadDevices();
-    } catch (error) {
+    } catch (err) {
       showToast({
         style: Toast.Style.Failure,
         title: "Failed to toggle",
-        message: String(error),
+        message: String(err),
       });
     }
   }
@@ -62,27 +66,52 @@ export default function Command(props: { arguments: Arguments }) {
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search devices..."
     >
-      {filteredDevices.map((device) => (
-        <List.Item
-          key={device.id}
-          title={device.name}
-          subtitle={device.room}
-          icon={{
-            source: device.isOn ? Icon.LightBulbOn : Icon.LightBulbOff,
-            tintColor: device.isOn ? Color.Yellow : Color.SecondaryText,
-          }}
-          accessories={[{ text: device.isOn ? "ON" : "OFF" }]}
+      {error ? (
+        <List.EmptyView
+          icon={Icon.ExclamationMark}
+          title="lilhomie Not Reachable"
+          description={error}
           actions={
             <ActionPanel>
-              <Action
-                title="Toggle"
-                icon={Icon.Switch}
-                onAction={() => handleToggle(device)}
-              />
+              <Action title="Retry" icon={Icon.ArrowClockwise} onAction={loadDevices} />
             </ActionPanel>
           }
         />
-      ))}
+      ) : !isLoading && filteredDevices.length === 0 ? (
+        <List.EmptyView
+          icon={Icon.MagnifyingGlass}
+          title="No Matching Devices"
+          description={searchText ? `No devices matching "${searchText}"` : "No HomeKit devices available"}
+        />
+      ) : (
+        filteredDevices.map((device) => (
+          <List.Item
+            key={device.id}
+            title={device.name}
+            subtitle={device.room}
+            icon={{
+              source: device.isOn ? Icon.LightBulbOn : Icon.LightBulbOff,
+              tintColor: device.isOn ? Color.Yellow : Color.SecondaryText,
+            }}
+            accessories={[{ text: device.isOn ? "ON" : "OFF" }]}
+            actions={
+              <ActionPanel>
+                <Action
+                  title="Toggle"
+                  icon={Icon.Switch}
+                  onAction={() => handleToggle(device)}
+                />
+                <Action
+                  title="Refresh"
+                  icon={Icon.ArrowClockwise}
+                  shortcut={{ modifiers: ["cmd"], key: "r" }}
+                  onAction={loadDevices}
+                />
+              </ActionPanel>
+            }
+          />
+        ))
+      )}
     </List>
   );
 }
