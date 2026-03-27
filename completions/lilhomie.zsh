@@ -7,7 +7,7 @@
 #   sudo cp lilhomie.zsh /usr/local/share/zsh/site-functions/_lilhomie
 #
 # Option B — add the completions directory to $fpath in ~/.zshrc:
-#   fpath=(/usr/local/share/lilhomie/completions $fpath)
+#   fpath=(~/.config/lilhomie/completions $fpath)
 #   autoload -Uz compinit && compinit
 #
 # Option C — Oh-My-Zsh:
@@ -40,25 +40,29 @@ _lilhomie() {
         'help:Show help message'
     )
 
-    # Complete the first positional argument (subcommand)
+    # Complete the first positional argument (subcommand or global flag)
     if (( CURRENT == 2 )); then
-        _describe 'command' commands
         _arguments $global_flags
+        _describe 'command' commands
         return
     fi
 
+    # Find the subcommand — skip leading flags
+    local cmd
+    local -i i
+    for (( i = 2; i <= CURRENT; i++ )); do
+        case "${words[i]}" in
+            --json|-j|--help|-h) continue ;;
+            *) cmd="${words[i]}"; break ;;
+        esac
+    done
+
     # Complete flags and arguments for each subcommand
-    local cmd="${words[2]}"
     case "${cmd}" in
         list|ls|devices|scenes|info|status-all|help)
             _arguments $global_flags
             ;;
-        status|get)
-            _arguments \
-                $global_flags \
-                ':device name: '
-            ;;
-        toggle|on|off)
+        status|get|toggle|on|off)
             _arguments \
                 $global_flags \
                 ':device name: '
@@ -67,7 +71,7 @@ _lilhomie() {
             _arguments \
                 $global_flags \
                 ':device name: ' \
-                ':brightness (0-100): '
+                ':brightness (0-100):(0 10 20 25 30 40 50 60 70 75 80 90 100)'
             ;;
         scene)
             _arguments \
@@ -76,6 +80,7 @@ _lilhomie() {
             ;;
         *)
             _arguments $global_flags
+            _describe 'command' commands
             ;;
     esac
 }

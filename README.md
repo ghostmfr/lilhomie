@@ -84,7 +84,9 @@ up completions for your shell:
 sudo cp completions/lilhomie.zsh /usr/local/share/zsh/site-functions/_lilhomie
 
 # Option B — add completions dir to fpath in ~/.zshrc
-echo 'fpath=(/usr/local/share/lilhomie/completions $fpath)' >> ~/.zshrc
+mkdir -p ~/.config/lilhomie/completions
+cp completions/lilhomie.zsh ~/.config/lilhomie/completions/
+echo 'fpath=(~/.config/lilhomie/completions $fpath)' >> ~/.zshrc
 echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
 
 # Option C — Oh-My-Zsh
@@ -98,13 +100,19 @@ cp completions/lilhomie.zsh ~/.oh-my-zsh/completions/_lilhomie
 sudo cp completions/lilhomie.bash /etc/bash_completion.d/lilhomie
 
 # Option B — source directly from ~/.bashrc
-echo 'source /usr/local/share/lilhomie/completions/lilhomie.bash' >> ~/.bashrc
+mkdir -p ~/.config/lilhomie/completions
+cp completions/lilhomie.bash ~/.config/lilhomie/completions/
+echo 'source ~/.config/lilhomie/completions/lilhomie.bash' >> ~/.bashrc
 ```
 
 #### fish
 
 ```bash
+# User completions directory (no sudo required)
 cp completions/lilhomie.fish ~/.config/fish/completions/lilhomie.fish
+
+# Or system-wide
+sudo cp completions/lilhomie.fish /usr/share/fish/vendor_completions.d/lilhomie.fish
 ```
 
 Then restart your shell (or run `exec $SHELL`) and tab-completion for

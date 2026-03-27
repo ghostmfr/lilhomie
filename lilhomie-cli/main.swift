@@ -56,19 +56,19 @@ func parseGlobalFlags(_ rawArgs: [String]) -> (args: [String], jsonOutput: Bool)
 func request(_ method: String, _ path: String, body: [String: Any]? = nil) -> Data? {
     guard let url = URL(string: baseURL + path) else { return nil }
     
-    var request = URLRequest(url: url)
-    request.httpMethod = method
-    request.timeoutInterval = 10
+    var req = URLRequest(url: url)
+    req.httpMethod = method
+    req.timeoutInterval = 10
     
     if let body = body {
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
     }
     
     let semaphore = DispatchSemaphore(value: 0)
     var result: Data?
     
-    URLSession.shared.dataTask(with: request) { data, _, error in
+    URLSession.shared.dataTask(with: req) { data, _, error in
         result = error == nil ? data : nil
         semaphore.signal()
     }.resume()
@@ -84,209 +84,177 @@ func printJSON(_ data: Data) {
        let str = String(data: pretty, encoding: .utf8) {
         print(str)
     } else if let str = String(data: data, encoding: .utf8) {
-        // Fall back to raw bytes if we can't pretty-print
         print(str)
     } else {
         print("{}")
     }
 }
 
+// MARK: - Shared Fetch Helper
+
+/// Fetch data from the API and either emit raw JSON (when `jsonOutput` is true) or
+/// decode the response to `T` and hand it to `display`.  Exits on network/decode failure.
+func fetchAndDisplay<T: Decodable>(
+    method: String,
+    path: String,
+    body: [String: Any]? = nil,
+    jsonOutput: Bool,
+    failMessage: String,
+    as type: T.Type,
+    display: (T) -> Void
+) {
+    guard let data = request(method, path, body: body) else {
+        print(failMessage)
+        exit(1)
+    }
+    if jsonOutput {
+        printJSON(data)
+        return
+    }
+    guard let decoded = try? JSONDecoder().decode(type, from: data) else {
+        print(failMessage)
+        exit(1)
+    }
+    display(decoded)
+}
+
 // MARK: - Commands
 
 func listDevices(jsonOutput: Bool = false) {
-    guard let data = request("GET", "/devices") else {
-        print("❌ Failed to connect to Homie. Is the app running?")
-        exit(1)
-    }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let response = try? JSONDecoder().decode(DevicesResponse.self, from: data) else {
-        print("❌ Failed to parse devices response")
-        exit(1)
-    }
-    
-    if response.devices.isEmpty {
-        print("No devices found.")
-        return
-    }
-    
-    print("📱 HomeKit Devices:\n")
-    
-    // Group by room
-    let grouped = Dictionary(grouping: response.devices) { $0.room ?? "No Room" }
-    for (room, devices) in grouped.sorted(by: { $0.key < $1.key }) {
-        print("  \(room):")
-        for device in devices.sorted(by: { $0.name < $1.name }) {
-            let status = device.isOn ? "🟢" : "⚪️"
-            let brightness = device.brightness.map { " (\($0)%)" } ?? ""
-            print("    \(status) \(device.name)\(brightness)")
+    fetchAndDisplay(
+        method: "GET", path: "/devices",
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Failed to connect to Homie. Is the app running?",
+        as: DevicesResponse.self
+    ) { response in
+        if response.devices.isEmpty {
+            print("No devices found.")
+            return
         }
-        print("")
+        print("📱 HomeKit Devices:\n")
+        let grouped = Dictionary(grouping: response.devices) { $0.room ?? "No Room" }
+        for (room, devices) in grouped.sorted(by: { $0.key < $1.key }) {
+            print("  \(room):")
+            for device in devices.sorted(by: { $0.name < $1.name }) {
+                let status = device.isOn ? "🟢" : "⚪️"
+                let brightness = device.brightness.map { " (\($0)%)" } ?? ""
+                print("    \(status) \(device.name)\(brightness)")
+            }
+            print("")
+        }
+        print("Total: \(response.devices.count) devices")
     }
-    
-    print("Total: \(response.devices.count) devices")
 }
 
 func listScenes(jsonOutput: Bool = false) {
-    guard let data = request("GET", "/scenes") else {
-        print("❌ Failed to connect to Homie. Is the app running?")
-        exit(1)
+    fetchAndDisplay(
+        method: "GET", path: "/scenes",
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Failed to connect to Homie. Is the app running?",
+        as: ScenesResponse.self
+    ) { response in
+        if response.scenes.isEmpty {
+            print("No scenes found.")
+            return
+        }
+        print("🎬 HomeKit Scenes:\n")
+        for scene in response.scenes {
+            print("  • \(scene.name) (\(scene.actions) actions)")
+        }
+        print("\nTotal: \(response.scenes.count) scenes")
     }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let response = try? JSONDecoder().decode(ScenesResponse.self, from: data) else {
-        print("❌ Failed to parse scenes response")
-        exit(1)
-    }
-    
-    if response.scenes.isEmpty {
-        print("No scenes found.")
-        return
-    }
-    
-    print("🎬 HomeKit Scenes:\n")
-    for scene in response.scenes {
-        print("  • \(scene.name) (\(scene.actions) actions)")
-    }
-    print("\nTotal: \(response.scenes.count) scenes")
 }
 
 func getStatus(_ name: String, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("GET", "/device/\(encoded)") else {
-        print("❌ Device '\(name)' not found")
-        exit(1)
-    }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let device = try? JSONDecoder().decode(Device.self, from: data) else {
-        print("❌ Device '\(name)' not found")
-        exit(1)
-    }
-    
-    print("📱 \(device.name)")
-    print("   Status: \(device.isOn ? "🟢 ON" : "⚪️ OFF")")
-    if let brightness = device.brightness {
-        print("   Brightness: \(brightness)%")
-    }
-    if let room = device.room {
-        print("   Room: \(room)")
+    fetchAndDisplay(
+        method: "GET", path: "/device/\(encoded)",
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Device '\(name)' not found",
+        as: Device.self
+    ) { device in
+        print("📱 \(device.name)")
+        print("   Status: \(device.isOn ? "🟢 ON" : "⚪️ OFF")")
+        if let brightness = device.brightness {
+            print("   Brightness: \(brightness)%")
+        }
+        if let room = device.room {
+            print("   Room: \(room)")
+        }
     }
 }
 
 func toggleDevice(_ name: String, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/device/\(encoded)/toggle") else {
-        print("❌ Failed to toggle '\(name)'")
-        exit(1)
-    }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
-        print("❌ Failed to toggle '\(name)'")
-        exit(1)
-    }
-    
-    if response.success == true {
-        if let device = response.device {
-            print("✅ \(device.name) → \(device.isOn ? "ON 🟢" : "OFF ⚪️")")
+    fetchAndDisplay(
+        method: "POST", path: "/device/\(encoded)/toggle",
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Failed to toggle '\(name)'",
+        as: ActionResponse.self
+    ) { response in
+        if response.success == true {
+            if let device = response.device {
+                print("✅ \(device.name) → \(device.isOn ? "ON 🟢" : "OFF ⚪️")")
+            } else {
+                print("✅ Toggled '\(name)'")
+            }
         } else {
-            print("✅ Toggled '\(name)'")
+            print("❌ \(response.error ?? "Unknown error")")
+            exit(1)
         }
-    } else {
-        print("❌ \(response.error ?? "Unknown error")")
-        exit(1)
     }
 }
 
 func setDevice(_ name: String, on: Bool, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/device/\(encoded)/set", body: ["on": on]) else {
-        print("❌ Failed to set '\(name)'")
-        exit(1)
-    }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
-        print("❌ Failed to set '\(name)'")
-        exit(1)
-    }
-    
-    if response.success == true {
-        print("✅ \(name) → \(on ? "ON 🟢" : "OFF ⚪️")")
-    } else {
-        print("❌ \(response.error ?? "Unknown error")")
-        exit(1)
+    fetchAndDisplay(
+        method: "POST", path: "/device/\(encoded)/set",
+        body: ["on": on],
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Failed to set '\(name)'",
+        as: ActionResponse.self
+    ) { response in
+        if response.success == true {
+            print("✅ \(name) → \(on ? "ON 🟢" : "OFF ⚪️")")
+        } else {
+            print("❌ \(response.error ?? "Unknown error")")
+            exit(1)
+        }
     }
 }
 
 func setBrightness(_ name: String, _ level: Int, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/device/\(encoded)/set", body: ["on": true, "brightness": level]) else {
-        print("❌ Failed to set brightness for '\(name)'")
-        exit(1)
-    }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
-        print("❌ Failed to set brightness for '\(name)'")
-        exit(1)
-    }
-    
-    if response.success == true {
-        print("✅ \(name) → \(level)%")
-    } else {
-        print("❌ \(response.error ?? "Unknown error")")
-        exit(1)
+    fetchAndDisplay(
+        method: "POST", path: "/device/\(encoded)/set",
+        body: ["on": true, "brightness": level],
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Failed to set brightness for '\(name)'",
+        as: ActionResponse.self
+    ) { response in
+        if response.success == true {
+            print("✅ \(name) → \(level)%")
+        } else {
+            print("❌ \(response.error ?? "Unknown error")")
+            exit(1)
+        }
     }
 }
 
 func triggerScene(_ name: String, jsonOutput: Bool = false) {
     let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? name
-    guard let data = request("POST", "/scene/\(encoded)/trigger") else {
-        print("❌ Failed to trigger scene '\(name)'")
-        exit(1)
-    }
-
-    if jsonOutput {
-        printJSON(data)
-        return
-    }
-
-    guard let response = try? JSONDecoder().decode(ActionResponse.self, from: data) else {
-        print("❌ Failed to trigger scene '\(name)'")
-        exit(1)
-    }
-    
-    if response.success == true {
-        print("✅ Scene '\(name)' triggered")
-    } else {
-        print("❌ \(response.error ?? "Scene not found")")
-        exit(1)
+    fetchAndDisplay(
+        method: "POST", path: "/scene/\(encoded)/trigger",
+        jsonOutput: jsonOutput,
+        failMessage: "❌ Failed to trigger scene '\(name)'",
+        as: ActionResponse.self
+    ) { response in
+        if response.success == true {
+            print("✅ Scene '\(name)' triggered")
+        } else {
+            print("❌ \(response.error ?? "Scene not found")")
+            exit(1)
+        }
     }
 }
 
@@ -295,12 +263,10 @@ func showStatus(jsonOutput: Bool = false) {
         print("❌ Failed to connect to Homie. Is the app running?")
         exit(1)
     }
-
     if jsonOutput {
         printJSON(data)
         return
     }
-
     guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
         print("❌ Failed to connect to Homie. Is the app running?")
         exit(1)
