@@ -71,6 +71,53 @@ unzip lilhomie.zip
 sudo mv lilhomie /usr/local/bin/
 ```
 
+### Shell Completions
+
+Completion scripts for **bash**, **zsh**, and **fish** are included in the
+`completions/` directory of this repository. After installing the binary, set
+up completions for your shell:
+
+#### zsh
+
+```bash
+# Option A — copy to a fpath directory (recommended)
+sudo cp completions/lilhomie.zsh /usr/local/share/zsh/site-functions/_lilhomie
+
+# Option B — add completions dir to fpath in ~/.zshrc
+mkdir -p ~/.config/lilhomie/completions
+cp completions/lilhomie.zsh ~/.config/lilhomie/completions/
+echo 'fpath=(~/.config/lilhomie/completions $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+
+# Option C — Oh-My-Zsh
+cp completions/lilhomie.zsh ~/.oh-my-zsh/completions/_lilhomie
+```
+
+#### bash
+
+```bash
+# Option A — bash-completion framework
+sudo cp completions/lilhomie.bash /etc/bash_completion.d/lilhomie
+
+# Option B — source directly from ~/.bashrc
+mkdir -p ~/.config/lilhomie/completions
+cp completions/lilhomie.bash ~/.config/lilhomie/completions/
+echo 'source ~/.config/lilhomie/completions/lilhomie.bash' >> ~/.bashrc
+```
+
+#### fish
+
+```bash
+# User completions directory (no sudo required)
+cp completions/lilhomie.fish ~/.config/fish/completions/lilhomie.fish
+
+# Or system-wide
+sudo cp completions/lilhomie.fish /usr/share/fish/vendor_completions.d/lilhomie.fish
+```
+
+Then restart your shell (or run `exec $SHELL`) and tab-completion for
+`lilhomie` will be available.
+
 ---
 
 ## REST API
@@ -139,10 +186,34 @@ lilhomie status "Desk Lamp"      # Device status
 lilhomie on "Desk Lamp"          # Turn on
 lilhomie off "Desk Lamp"         # Turn off
 lilhomie toggle "Desk Lamp"      # Toggle
-lilhomie set "Desk Lamp" -b 50   # Set brightness
+lilhomie set "Desk Lamp" 50      # Set brightness to 50%
 
 lilhomie scenes                  # List scenes
 lilhomie scene "Good Night"      # Trigger scene
+
+lilhomie info                    # Show Homie app status
+```
+
+### JSON output flag
+
+Add `--json` (or `-j`) to any command to get raw JSON back instead of the
+human-readable output. Perfect for piping into `jq` or any other tool.
+
+```bash
+# List all devices as JSON
+lilhomie list --json
+
+# Filter to devices that are currently on
+lilhomie list --json | jq '.devices[] | select(.isOn) | .name'
+
+# Get a single device as JSON
+lilhomie status "Desk Lamp" --json
+
+# Check scenes as JSON
+lilhomie scenes -j | jq '.scenes[].name'
+
+# Use in scripts
+IS_ON=$(lilhomie status "Desk Lamp" --json | jq -r '.isOn')
 ```
 
 ---
