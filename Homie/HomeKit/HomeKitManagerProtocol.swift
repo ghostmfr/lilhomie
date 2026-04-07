@@ -19,7 +19,7 @@ protocol HomeKitManagerProtocol: AnyObject {
 
     // For /debug endpoint
     var homeManagerHomesCount: Int { get }
-    var homeManagerAuthStatus: Int { get }
+    var homeManagerAuthStatus: UInt { get }
 }
 
 // MARK: - Default lookup implementations
@@ -56,7 +56,7 @@ extension HomeKitManager: HomeKitManagerProtocol {
         homeManager.homes.count
     }
 
-    var homeManagerAuthStatus: Int {
+    var homeManagerAuthStatus: UInt {
         homeManager.authorizationStatus.rawValue
     }
 }
