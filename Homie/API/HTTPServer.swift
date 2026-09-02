@@ -134,8 +134,8 @@ class HTTPServer {
             let pathWithoutSchema = String(path.dropLast("/schema".count))
             let id = normalizeName(String(pathWithoutSchema.dropFirst("/device/".count)))
             
-            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
-                return errorResponse(404, "Device not found")
+            guard let device = resolveDevice(id) else {
+                return deviceNotFoundResponse(id)
             }
             
             var schema: [String: Any] = [
@@ -167,19 +167,10 @@ class HTTPServer {
         if method == "GET" && path.hasPrefix("/device/") && !path.contains("/toggle") && !path.contains("/set") && !path.contains("/schema") {
             let id = normalizeName(String(path.dropFirst("/device/".count)))
             NSLog("[HTTP] Looking up device: '\(id)'")
-            if let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) {
+            if let device = resolveDevice(id) {
                 return jsonResponse(deviceToDict(device))
             }
-            // Better error message with suggestions
-            let suggestions = homeKitManager.devices
-                .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
-                .prefix(3)
-                .map { $0.name }
-            if suggestions.isEmpty {
-                return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
-            } else {
-                return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
-            }
+            return deviceNotFoundResponse(id)
         }
         
         if method == "POST" && path.hasSuffix("/toggle") && !path.contains("/room/") {
@@ -187,16 +178,8 @@ class HTTPServer {
             let id = normalizeName(String(pathWithoutToggle.dropFirst("/device/".count)))
             NSLog("[HTTP] Toggle device: '\(id)'")
             
-            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
-                let suggestions = homeKitManager.devices
-                    .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
-                    .prefix(3)
-                    .map { $0.name }
-                if suggestions.isEmpty {
-                    return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
-                } else {
-                    return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
-                }
+            guard let device = resolveDevice(id) else {
+                return deviceNotFoundResponse(id)
             }
             
             let semaphore = DispatchSemaphore(value: 0)
@@ -223,16 +206,8 @@ class HTTPServer {
             let id = normalizeName(String(pathWithoutOn.dropFirst("/device/".count)))
             NSLog("[HTTP] Turn device on: '\(id)'")
 
-            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
-                let suggestions = homeKitManager.devices
-                    .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
-                    .prefix(3)
-                    .map { $0.name }
-                if suggestions.isEmpty {
-                    return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
-                } else {
-                    return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
-                }
+            guard let device = resolveDevice(id) else {
+                return deviceNotFoundResponse(id)
             }
 
             let semaphore = DispatchSemaphore(value: 0)
@@ -259,16 +234,8 @@ class HTTPServer {
             let id = normalizeName(String(pathWithoutOff.dropFirst("/device/".count)))
             NSLog("[HTTP] Turn device off: '\(id)'")
 
-            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
-                let suggestions = homeKitManager.devices
-                    .filter { $0.name.lowercased().contains(id.lowercased().prefix(3)) }
-                    .prefix(3)
-                    .map { $0.name }
-                if suggestions.isEmpty {
-                    return errorResponse(404, "Device '\(id)' not found. Use /devices to list all.")
-                } else {
-                    return errorResponse(404, "Device '\(id)' not found. Did you mean: \(suggestions.joined(separator: ", "))?")
-                }
+            guard let device = resolveDevice(id) else {
+                return deviceNotFoundResponse(id)
             }
 
             let semaphore = DispatchSemaphore(value: 0)
@@ -294,8 +261,8 @@ class HTTPServer {
             let pathWithoutSet = String(path.dropLast("/set".count))
             let id = normalizeName(String(pathWithoutSet.dropFirst("/device/".count)))
             
-            guard let device = homeKitManager.getDevice(byId: id) ?? homeKitManager.getDevice(byName: id) else {
-                return errorResponse(404, "Device not found")
+            guard let device = resolveDevice(id) else {
+                return deviceNotFoundResponse(id)
             }
             
             let on = body?["on"] as? Bool ?? device.isOn
@@ -438,12 +405,11 @@ class HTTPServer {
                 deviceName = normalizeName(afterDevice)
             }
             
-            // Find device in specific room
-            guard let device = homeKitManager.devices.first(where: { 
-                $0.name.lowercased() == deviceName.lowercased() && 
+            let roomDevices = homeKitManager.devices.filter {
                 $0.roomName?.lowercased() == roomName.lowercased()
-            }) else {
-                return errorResponse(404, "Device '\(deviceName)' not found in room '\(roomName)'")
+            }
+            guard let device = resolveDevice(deviceName, in: roomDevices) else {
+                return deviceNotFoundResponse(deviceName, candidates: roomDevices)
             }
             
             // GET /room/{room}/device/{device} - status
@@ -597,6 +563,30 @@ class HTTPServer {
     private func normalizeName(_ name: String) -> String {
         return name.replacingOccurrences(of: "_", with: " ")
     }
+
+    private func resolveDevice(_ query: String, in candidates: [HomeDevice]? = nil) -> HomeDevice? {
+        guard let candidates else {
+            return homeKitManager.getDevice(byId: query) ?? homeKitManager.getDevice(byName: query)
+        }
+
+        if let device = candidates.first(where: { $0.id == query }) {
+            return device
+        }
+        let normalizedQuery = normalizeDeviceName(query)
+        return candidates.first { normalizeDeviceName($0.name) == normalizedQuery }
+            ?? candidates.first { deviceNameMatches(query: query, candidate: $0.name) }
+    }
+
+    private func deviceNotFoundResponse(_ query: String, candidates: [HomeDevice]? = nil) -> String {
+        let availableDevices = candidates ?? homeKitManager.devices
+        let suggestion = closestDeviceName(to: query, in: availableDevices.map(\.name))
+        let payload: [String: Any] = [
+            "error": "device_not_found",
+            "message": "No device matched '\(query)'.",
+            "did_you_mean": suggestion ?? NSNull()
+        ]
+        return jsonResponse(payload, statusCode: 404)
+    }
     
     private func exampleBody(for device: HomeDevice) -> [String: Any] {
         var example: [String: Any] = ["on": true]
@@ -637,12 +627,13 @@ class HTTPServer {
         ]
     }
     
-    private func jsonResponse(_ data: Any) -> String {
+    private func jsonResponse(_ data: Any, statusCode: Int = 200) -> String {
         let json = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
         let body = json.flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+        let status = statusCode == 200 ? "OK" : (statusCode == 404 ? "Not Found" : "Error")
         
         return """
-        HTTP/1.1 200 OK\r
+        HTTP/1.1 \(statusCode) \(status)\r
         Content-Type: application/json\r
         Content-Length: \(body.utf8.count)\r
         Connection: close\r

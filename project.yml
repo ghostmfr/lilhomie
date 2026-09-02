@@ -85,11 +85,13 @@ targets:
   # Unit test target
   HomieTests:
     type: bundle.unit-test
-    platform: macOS
+    platform: iOS
+    supportedDestinations: [macCatalyst]
     sources:
       - path: Tests
         excludes:
           - "*.sh"
+          - "DeviceNameMatcherTests.swift"
       - path: Homie/HomeKit
       - path: Homie/Context/RuleEngine.swift
       - path: Homie/Context/AppMonitor.swift
@@ -101,7 +103,5 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.homie.mac.tests
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
-      - framework: HomeKit.framework
-        embed: false
-      - framework: Network.framework
-        embed: false
+      - sdk: HomeKit.framework
+      - sdk: Network.framework

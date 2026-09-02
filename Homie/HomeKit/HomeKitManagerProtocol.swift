@@ -35,9 +35,9 @@ extension HomeKitManagerProtocol {
     }
 
     func getDevice(byName name: String) -> HomeDevice? {
-        let lower = name.lowercased()
-        if let exact = devices.first(where: { $0.name.lowercased() == lower }) { return exact }
-        return devices.first { $0.name.lowercased().contains(lower) }
+        let normalizedQuery = normalizeDeviceName(name)
+        return devices.first { normalizeDeviceName($0.name) == normalizedQuery }
+            ?? devices.first { deviceNameMatches(query: name, candidate: $0.name) }
     }
 
     func getScene(byId id: String) -> HomeScene? {

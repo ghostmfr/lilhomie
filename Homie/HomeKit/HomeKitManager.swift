@@ -263,33 +263,6 @@ class HomeKitManager: NSObject, ObservableObject {
         return devices.first { $0.id == id }
     }
     
-    func getDevice(byName name: String) -> HomeDevice? {
-        let lowercaseName = name.lowercased()
-        
-        // Exact match
-        if let device = devices.first(where: { $0.name.lowercased() == lowercaseName }) {
-            return device
-        }
-        
-        // Contains match
-        if let device = devices.first(where: { $0.name.lowercased().contains(lowercaseName) }) {
-            return device
-        }
-        
-        // Fuzzy match
-        let searchWords = lowercaseName.split(separator: " ")
-        for device in devices {
-            let deviceWords = device.name.lowercased().split(separator: " ")
-            if searchWords.allSatisfy({ searchWord in
-                deviceWords.contains { $0.contains(searchWord) }
-            }) {
-                return device
-            }
-        }
-        
-        return nil
-    }
-    
     func getScene(byId id: String) -> HomeScene? {
         return scenes.first { $0.id == id }
     }
