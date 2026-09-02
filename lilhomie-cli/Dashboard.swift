@@ -67,10 +67,7 @@ private func readKey() -> Key? {
     case 43:  return .plus
     case 45:  return .minus
     default:
-        if let scalar = Unicode.Scalar(buf[0]) {
-            return .char(Character(scalar))
-        }
-        return nil
+        return .char(Character(Unicode.Scalar(buf[0])))
     }
 }
 

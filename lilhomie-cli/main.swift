@@ -138,7 +138,7 @@ func listDevices(jsonOutput: Bool = false) {
             for device in devices.sorted(by: { $0.name < $1.name }) {
                 let status = device.isOn ? "🟢" : "⚪️"
                 let brightness = device.brightness.map { " (\($0)%)" } ?? ""
-                print("    \(status) \(device.name)\(brightness)")
+                print("    \(status) \"\(device.name)\" [id: \(device.id)]\(brightness)")
             }
             print("")
         }

@@ -46,6 +46,14 @@ final class HomeKitManagerTests: XCTestCase {
         XCTAssertEqual(found?.id, "n1")
     }
 
+    func testGetDeviceByNamePrefersExactMatchOverEarlierPartialMatch() {
+        let m = makeMockManager(devices: [
+            Fixtures.makeDevice(id: "partial", name: "Bed Lamp"),
+            Fixtures.makeDevice(id: "exact", name: "Lamp")
+        ])
+        XCTAssertEqual(m.getDevice(byName: "lamp")?.id, "exact")
+    }
+
     func testGetDeviceByNameCaseInsensitive() {
         let d = Fixtures.makeDevice(id: "n2", name: "Kitchen Light")
         let m = makeMockManager(devices: [d])
@@ -58,6 +66,13 @@ final class HomeKitManagerTests: XCTestCase {
         let m = makeMockManager(devices: [d])
         let found = m.getDevice(byName: "Lamp")
         XCTAssertEqual(found?.id, "n3")
+    }
+
+    func testGetDeviceByNameMatchesPartialWordsCaseInsensitively() {
+        let d = Fixtures.makeDevice(id: "n5", name: "Bedroom Reading Lamp")
+        let m = makeMockManager(devices: [d])
+        let found = m.getDevice(byName: "BED READ")
+        XCTAssertEqual(found?.id, "n5")
     }
 
     func testGetDeviceByNameNotFound() {

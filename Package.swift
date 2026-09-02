@@ -10,9 +10,20 @@ let package = Package(
         .executable(name: "lilhomie", targets: ["lilhomie"])
     ],
     targets: [
+        .target(
+            name: "DeviceNameMatching",
+            path: "Homie/HomeKit",
+            sources: ["DeviceNameMatcher.swift"]
+        ),
         .executableTarget(
             name: "lilhomie",
             path: "lilhomie-cli"
+        ),
+        .testTarget(
+            name: "DeviceNameMatchingTests",
+            dependencies: ["DeviceNameMatching"],
+            path: "Tests",
+            sources: ["DeviceNameMatcherTests.swift"]
         )
     ]
 )

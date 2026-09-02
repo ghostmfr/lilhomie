@@ -43,7 +43,7 @@ targets:
       - sdk: Network.framework
       - sdk: ServiceManagement.framework
 
-  # Native macOS target (full features - app-aware scenes, menu bar)
+  # Native macOS target (app-aware scenes and menu bar; HomeKit requires Catalyst)
   HomieMac:
     type: application
     platform: macOS
@@ -73,23 +73,20 @@ targets:
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
     dependencies:
-      - framework: HomeKit.framework
-        embed: false
-      - framework: Network.framework
-        embed: false
-      - framework: ServiceManagement.framework
-        embed: false
-      - framework: AppKit.framework
-        embed: false
+      - sdk: Network.framework
+      - sdk: ServiceManagement.framework
+      - sdk: AppKit.framework
 
   # Unit test target
   HomieTests:
     type: bundle.unit-test
-    platform: macOS
+    platform: iOS
+    supportedDestinations: [macCatalyst]
     sources:
       - path: Tests
         excludes:
           - "*.sh"
+          - "DeviceNameMatcherTests.swift"
       - path: Homie/HomeKit
       - path: Homie/Context/RuleEngine.swift
       - path: Homie/Context/AppMonitor.swift
@@ -101,7 +98,5 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.homie.mac.tests
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
-      - framework: HomeKit.framework
-        embed: false
-      - framework: Network.framework
-        embed: false
+      - sdk: HomeKit.framework
+      - sdk: Network.framework

@@ -125,7 +125,7 @@ Then restart your shell (or run `exec $SHELL`) and tab-completion for
 
 The API runs on `http://localhost:8420` while the app is running.
 
-> **Tip:** Use underscores for spaces in device/room names: `Desk_Lamp`
+> **Device names:** Copy the quoted HomeKit accessory name or ID from `lilhomie list`. Names are case-insensitive and may be shortened to partial words (`bed read` matches `"Bedroom Reading Lamp"`). Quote CLI names that contain spaces. In HTTP paths, use URL-encoded spaces (`Desk%20Lamp`) or underscores (`Desk_Lamp`).
 
 ### Devices
 
@@ -216,6 +216,15 @@ lilhomie scenes -j | jq '.scenes[].name'
 # Use in scripts
 IS_ON=$(lilhomie status "Desk Lamp" --json | jq -r '.isOn')
 ```
+
+Human-readable `lilhomie list` output includes copy-paste-ready names and IDs:
+
+```text
+  Office:
+    🟢 "Desk Lamp" [id: A1B2-C3D4] (75%)
+```
+
+Use either `lilhomie on "Desk Lamp"` or `lilhomie on A1B2-C3D4`. If no device matches, the HTTP API returns a 404 with the closest known name in `did_you_mean`.
 
 ---
 

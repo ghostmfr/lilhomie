@@ -19,7 +19,7 @@ protocol HomeKitManagerProtocol: AnyObject {
 
     // For /debug endpoint
     var homeManagerHomesCount: Int { get }
-    var homeManagerAuthStatus: Int { get }
+    var homeManagerAuthStatus: UInt { get }
 }
 
 // MARK: - Default lookup implementations
@@ -35,9 +35,9 @@ extension HomeKitManagerProtocol {
     }
 
     func getDevice(byName name: String) -> HomeDevice? {
-        let lower = name.lowercased()
-        if let exact = devices.first(where: { $0.name.lowercased() == lower }) { return exact }
-        return devices.first { $0.name.lowercased().contains(lower) }
+        let normalizedQuery = normalizeDeviceName(name)
+        return devices.first { normalizeDeviceName($0.name) == normalizedQuery }
+            ?? devices.first { deviceNameMatches(query: name, candidate: $0.name) }
     }
 
     func getScene(byId id: String) -> HomeScene? {
@@ -52,11 +52,16 @@ extension HomeKitManagerProtocol {
 // MARK: - HomeKitManager conformance
 
 extension HomeKitManager: HomeKitManagerProtocol {
+#if canImport(HomeKit)
     var homeManagerHomesCount: Int {
         homeManager.homes.count
     }
 
-    var homeManagerAuthStatus: Int {
+    var homeManagerAuthStatus: UInt {
         homeManager.authorizationStatus.rawValue
     }
+#else
+    var homeManagerHomesCount: Int { 0 }
+    var homeManagerAuthStatus: UInt { 0 }
+#endif
 }

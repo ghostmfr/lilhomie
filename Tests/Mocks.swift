@@ -20,7 +20,7 @@ final class MockHomeKitManager: HomeKitManagerProtocol {
     var devices: [HomeDevice] = []
     var scenes: [HomeScene] = []
     var homeManagerHomesCount: Int = 0
-    var homeManagerAuthStatus: Int = 0
+    var homeManagerAuthStatus: UInt = 0
 
     // MARK: Call recording
 

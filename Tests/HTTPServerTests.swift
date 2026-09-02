@@ -121,6 +121,24 @@ final class HTTPServerTests: XCTestCase {
         XCTAssertNotNil(resp.json?["error"])
     }
 
+    func testGetDeviceUsesFuzzyPartialWordMatching() {
+        mock.devices = [Fixtures.makeDevice(id: "fuzzy-1", name: "Bedroom Reading Lamp")]
+        let resp = parseHTTPResponse(server.handleRequest(request("GET", "/device/BED_READ")))
+        XCTAssertEqual(resp.statusCode, 200)
+        XCTAssertEqual(resp.json?["id"] as? String, "fuzzy-1")
+    }
+
+    func testGetDeviceNotFoundIncludesClosestNameSuggestion() {
+        mock.devices = [
+            Fixtures.makeDevice(id: "suggestion-1", name: "Bedroom Lamp"),
+            Fixtures.makeDevice(id: "suggestion-2", name: "Kitchen Fan")
+        ]
+        let resp = parseHTTPResponse(server.handleRequest(request("GET", "/device/bedrom_lamp")))
+        XCTAssertEqual(resp.statusCode, 404)
+        XCTAssertEqual(resp.json?["error"] as? String, "device_not_found")
+        XCTAssertEqual(resp.json?["did_you_mean"] as? String, "Bedroom Lamp")
+    }
+
     func testGetDeviceBrightnessIncludedForLight() {
         mock.devices = [Fixtures.makeDevice(id: "l1", name: "Lamp", type: .light, isOn: true, brightness: 75)]
         let resp = parseHTTPResponse(server.handleRequest(request("GET", "/device/l1")))
@@ -364,6 +382,23 @@ final class HTTPServerTests: XCTestCase {
         let resp = parseHTTPResponse(server.handleRequest(request("GET", "/room/Hallway/device/Sconce")))
         XCTAssertEqual(resp.statusCode, 200)
         XCTAssertEqual(resp.json?["name"] as? String, "Sconce")
+    }
+
+    func testGetRoomDeviceStatusUsesFuzzyPartialWordMatching() {
+        mock.devices = [Fixtures.makeDevice(id: "rd-fuzzy", name: "Reading Floor Lamp", roomName: "Bedroom")]
+        let resp = parseHTTPResponse(server.handleRequest(request("GET", "/room/Bedroom/device/read_floor")))
+        XCTAssertEqual(resp.statusCode, 200)
+        XCTAssertEqual(resp.json?["id"] as? String, "rd-fuzzy")
+    }
+
+    func testGetRoomDeviceStatusPrefersExactNameOverPartialMatch() {
+        mock.devices = [
+            Fixtures.makeDevice(id: "rd-partial", name: "Bed Lamp", roomName: "Bedroom"),
+            Fixtures.makeDevice(id: "rd-exact", name: "Lamp", roomName: "Bedroom")
+        ]
+        let resp = parseHTTPResponse(server.handleRequest(request("GET", "/room/Bedroom/device/lamp")))
+        XCTAssertEqual(resp.statusCode, 200)
+        XCTAssertEqual(resp.json?["id"] as? String, "rd-exact")
     }
 
     func testToggleRoomDevice() {
