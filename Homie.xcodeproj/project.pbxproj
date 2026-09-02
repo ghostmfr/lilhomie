@@ -8,26 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		0033111A5E0DEF2DDCA42A0A /* MacMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A0933C371CEFDE9F3A96F /* MacMenuBarView.swift */; };
+		05FA647A6EC3B6082E56879C /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C7D1D1F190CF0E1E7C9219 /* Network.framework */; };
 		081C566EB4EF56C2396201D0 /* RuleEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018E515F917E7B9C061577FD /* RuleEngineTests.swift */; };
 		0BA2253837C1705EEC13C874 /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */; };
-		1E8895CD41B210FE6F348B22 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E056276B11075CD3826DDE9C /* HomeKit.framework */; };
 		21DCF16AC5BFECB688DF405D /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */; };
 		2B65F25CD07A71F01E8F2725 /* HomeKitManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DD86FAB2BE59E8E6022532 /* HomeKitManagerProtocol.swift */; };
 		305CB69F4164D66FF7724326 /* HomeKitManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DD86FAB2BE59E8E6022532 /* HomeKitManagerProtocol.swift */; };
 		30D4CD0BE3219140DF8807BA /* HTTPServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3189E7AB3CCC81987986599B /* HTTPServerTests.swift */; };
 		3296AD1A46C931C7802A7E61 /* HomieState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487997F226154BC74A291A43 /* HomieState.swift */; };
 		35B325F12BFD6FBDD49CD27A /* MacAppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A0C01A757EDD52050C1B23 /* MacAppMonitor.swift */; };
-		3976900577D28AD913AB94D6 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1533CD4FE3A5A319E0E3767 /* HomeKit.framework */; };
 		3B8C48302F112E0C0C748672 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C7D1D1F190CF0E1E7C9219 /* Network.framework */; };
+		3F3406A9D1E52548B53B6FCE /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C7D1D1F190CF0E1E7C9219 /* Network.framework */; };
 		3F3659140B67B2A80C142D42 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */; };
 		3FEE9E3306E1C0444FB7B264 /* HomieState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487997F226154BC74A291A43 /* HomieState.swift */; };
 		455E09C9FA03C4CCC88E5449 /* HomeKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */; };
 		4FB91B83B36ECD09703B73F1 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58C918C42A752D4EA7B5167 /* Mocks.swift */; };
-		5BB230DD2B5329F81010FB67 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1533CD4FE3A5A319E0E3767 /* HomeKit.framework */; };
 		63EB44EC9FF993EDC8C9CDA7 /* MacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F838093FEC5FCF7CA274FE /* MacSettingsView.swift */; };
 		6422305EBC512D51D6C09CB9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F75566920457F4B5309CA7 /* SettingsView.swift */; };
 		65C3F7F29426309E5A612A26 /* HomieApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3EF13E3DCE2E0F5588CD70 /* HomieApp.swift */; };
 		68578A5D4D05786105F2DE05 /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */; };
+		7691EF48AC2E8DD17F590B78 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E056276B11075CD3826DDE9C /* HomeKit.framework */; };
 		790D84DE963F9C9D5A60FA58 /* RuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E38E9F04F28CABF500CCB50 /* RuleEngine.swift */; };
 		7ACF5076082896AE161D8EA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10F78ED67B2CEE1824DAF8B6 /* AppDelegate.swift */; };
 		7C5B27F23391262F549A0759 /* HomieMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00290E6650F1783B4C763E6A /* HomieMacApp.swift */; };
@@ -35,19 +35,18 @@
 		94B9F00AC92AA81385431AE2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 200B9DE9E0DA058D5F64C9AA /* AppKit.framework */; };
 		A5313DE40137E582D33FF0C7 /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */; };
 		A60D7BBB10B910C7C37091E3 /* HomieCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D53186C121A44DCE23BE344 /* HomieCharacter.swift */; };
-		A788E2202B6673019DED87CE /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DC16A114168BBAD56A1609 /* Network.framework */; };
 		AE125939142B879E302A8621 /* HomeKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */; };
 		B5C3BDCC77345AE92EB517DE /* RuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E38E9F04F28CABF500CCB50 /* RuleEngine.swift */; };
 		B9ADE5E6ACCC37413F91B23B /* HomieCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D53186C121A44DCE23BE344 /* HomieCharacter.swift */; };
 		BBFF3DB1A27B9B91F6CE63BC /* HomeKitManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5F9270F64745AE84731960 /* HomeKitManagerTests.swift */; };
 		C0F1A9B7797A64AE3C4A4802 /* DeviceNameMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE5227AF1497D926B4A78FF /* DeviceNameMatcher.swift */; };
 		C17320573DF25437C172B765 /* DeviceNameMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE5227AF1497D926B4A78FF /* DeviceNameMatcher.swift */; };
-		CC0BFF6C39E3F601EF64340C /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E9147AE4C4D3A35A11AA8AA /* ServiceManagement.framework */; };
 		CC36CC597D7078716A1E47E9 /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */; };
 		CE7418C4B9FC3C28B5D7EC6F /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */; };
 		DB56D3A479DFA8D39CECC477 /* HomeKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */; };
+		E300FF73182F810821D65CF2 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E056276B11075CD3826DDE9C /* HomeKit.framework */; };
 		E71C65B16FE7D46206E901C0 /* DeviceNameMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE5227AF1497D926B4A78FF /* DeviceNameMatcher.swift */; };
-		EC70F21814DE42FDB8FF0C88 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DC16A114168BBAD56A1609 /* Network.framework */; };
+		E7F3DD7B70B786E638A1C0DE /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */; };
 		F1838D33CF8BA51785CDF06B /* HomieState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487997F226154BC74A291A43 /* HomieState.swift */; };
 		F556FA1B264526F992475BA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2F5764F160F3A04AADF81B4 /* Assets.xcassets */; };
 		FCDBDD138DAF66A7898EBF26 /* RuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E38E9F04F28CABF500CCB50 /* RuleEngine.swift */; };
@@ -61,31 +60,28 @@
 		0CE5227AF1497D926B4A78FF /* DeviceNameMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNameMatcher.swift; sourceTree = "<group>"; };
 		0F5F9270F64745AE84731960 /* HomeKitManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeKitManagerTests.swift; sourceTree = "<group>"; };
 		10F78ED67B2CEE1824DAF8B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		200B9DE9E0DA058D5F64C9AA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppKit.framework; sourceTree = "<group>"; };
-		24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ServiceManagement.framework; sourceTree = "<group>"; };
+		200B9DE9E0DA058D5F64C9AA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		24F75566920457F4B5309CA7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2CA127665EFC4C61B7BB208A /* HomieMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomieMac.entitlements; sourceTree = "<group>"; };
 		3189E7AB3CCC81987986599B /* HTTPServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPServerTests.swift; sourceTree = "<group>"; };
-		3E9147AE4C4D3A35A11AA8AA /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		487997F226154BC74A291A43 /* HomieState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomieState.swift; sourceTree = "<group>"; };
 		5A3A0933C371CEFDE9F3A96F /* MacMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacMenuBarView.swift; sourceTree = "<group>"; };
 		6E38E9F04F28CABF500CCB50 /* RuleEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleEngine.swift; sourceTree = "<group>"; };
-		72C7D1D1F190CF0E1E7C9219 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Network.framework; sourceTree = "<group>"; };
+		72C7D1D1F190CF0E1E7C9219 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		7D3EF13E3DCE2E0F5588CD70 /* HomieApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomieApp.swift; sourceTree = "<group>"; };
 		7D53186C121A44DCE23BE344 /* HomieCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomieCharacter.swift; sourceTree = "<group>"; };
 		80BAFF35E1459F9307CC67B3 /* AppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMonitor.swift; sourceTree = "<group>"; };
 		91F838093FEC5FCF7CA274FE /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
 		92DD86FAB2BE59E8E6022532 /* HomeKitManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeKitManagerProtocol.swift; sourceTree = "<group>"; };
 		98A0C01A757EDD52050C1B23 /* MacAppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAppMonitor.swift; sourceTree = "<group>"; };
-		A1533CD4FE3A5A319E0E3767 /* HomeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HomeKit.framework; path = System/Library/Frameworks/HomeKit.framework; sourceTree = SDKROOT; };
 		A2C90F16859DB7E4D4241E36 /* HTTPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPServer.swift; sourceTree = "<group>"; };
 		C358369714632EDBAE12B2DE /* HomieTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HomieTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C58C918C42A752D4EA7B5167 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		D957B53CE8B8A9D9F6D552BF /* HomieMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomieMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEFCD4E78FA7FB3F9B1F4F86 /* HomeKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeKitManager.swift; sourceTree = "<group>"; };
-		E056276B11075CD3826DDE9C /* HomeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HomeKit.framework; sourceTree = "<group>"; };
+		E056276B11075CD3826DDE9C /* HomeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HomeKit.framework; path = System/Library/Frameworks/HomeKit.framework; sourceTree = SDKROOT; };
 		E2F5764F160F3A04AADF81B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E7DC16A114168BBAD56A1609 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,8 +89,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BB230DD2B5329F81010FB67 /* HomeKit.framework in Frameworks */,
-				EC70F21814DE42FDB8FF0C88 /* Network.framework in Frameworks */,
+				E300FF73182F810821D65CF2 /* HomeKit.framework in Frameworks */,
+				05FA647A6EC3B6082E56879C /* Network.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,9 +98,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3976900577D28AD913AB94D6 /* HomeKit.framework in Frameworks */,
-				A788E2202B6673019DED87CE /* Network.framework in Frameworks */,
-				CC0BFF6C39E3F601EF64340C /* ServiceManagement.framework in Frameworks */,
+				7691EF48AC2E8DD17F590B78 /* HomeKit.framework in Frameworks */,
+				3F3406A9D1E52548B53B6FCE /* Network.framework in Frameworks */,
+				E7F3DD7B70B786E638A1C0DE /* ServiceManagement.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +108,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E8895CD41B210FE6F348B22 /* HomeKit.framework in Frameworks */,
 				3B8C48302F112E0C0C748672 /* Network.framework in Frameworks */,
 				3F3659140B67B2A80C142D42 /* ServiceManagement.framework in Frameworks */,
 				94B9F00AC92AA81385431AE2 /* AppKit.framework in Frameworks */,
@@ -216,11 +211,8 @@
 			children = (
 				200B9DE9E0DA058D5F64C9AA /* AppKit.framework */,
 				E056276B11075CD3826DDE9C /* HomeKit.framework */,
-				A1533CD4FE3A5A319E0E3767 /* HomeKit.framework */,
 				72C7D1D1F190CF0E1E7C9219 /* Network.framework */,
-				E7DC16A114168BBAD56A1609 /* Network.framework */,
 				24596DAE42CBC07BBB14B1D6 /* ServiceManagement.framework */,
-				3E9147AE4C4D3A35A11AA8AA /* ServiceManagement.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -452,10 +444,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_HARDENED_RUNTIME = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\".\"",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -534,10 +522,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_HARDENED_RUNTIME = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\".\"",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;

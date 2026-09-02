@@ -1,5 +1,7 @@
 import Foundation
+#if canImport(HomeKit)
 import HomeKit
+#endif
 import os.log
 
 private let logger = Logger(subsystem: "com.ghostmfr.lilhomie", category: "HomeKit")
@@ -38,6 +40,7 @@ struct HomeScene: Identifiable {
     let actionCount: Int
 }
 
+#if canImport(HomeKit)
 class HomeKitManager: NSObject, ObservableObject {
     let homeManager = HMHomeManager()
     @Published var devices: [HomeDevice] = []
@@ -291,3 +294,43 @@ extension HomeKitManager: HMHomeManagerDelegate {
         NSLog("[HomeKit] Authorization status: \(status.rawValue)")
     }
 }
+#else
+/// Native macOS does not ship the HomeKit framework. Keep the native menu bar
+/// target buildable while the HomeKit-backed app and API remain available via
+/// the Mac Catalyst target.
+class HomeKitManager: NSObject, ObservableObject {
+    @Published var devices: [HomeDevice] = []
+    @Published var scenes: [HomeScene] = []
+
+    func requestAuthorization(completion: @escaping (Bool) -> Void) {
+        completion(false)
+    }
+
+    func loadDevices(completion: (() -> Void)? = nil) {
+        completion?()
+    }
+
+    func loadScenes() {}
+
+    func toggleDevice(_ device: HomeDevice, completion: @escaping (Bool) -> Void) {
+        completion(false)
+    }
+
+    func setDeviceState(
+        _ device: HomeDevice,
+        on: Bool,
+        brightness: Int? = nil,
+        completion: @escaping (Bool) -> Void
+    ) {
+        completion(false)
+    }
+
+    func triggerScene(named name: String, completion: @escaping (Bool) -> Void) {
+        completion(false)
+    }
+
+    func triggerScene(id: String, completion: @escaping (Bool) -> Void) {
+        completion(false)
+    }
+}
+#endif

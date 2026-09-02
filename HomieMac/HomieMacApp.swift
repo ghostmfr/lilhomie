@@ -1,6 +1,5 @@
 import SwiftUI
 import AppKit
-import HomeKit
 
 @main
 struct HomieMacApp: App {
@@ -59,7 +58,11 @@ class MacAppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
         
         // Start HTTP server
-        httpServer = HTTPServer(homeKitManager: homeKitManager, ruleEngine: ruleEngine)
+        httpServer = HTTPServer(
+            homeKitManager: homeKitManager,
+            ruleEngine: ruleEngine,
+            homieState: homieState
+        )
         httpServer?.start()
         
         // Start app monitoring for context-aware scenes

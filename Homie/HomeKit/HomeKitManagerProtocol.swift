@@ -52,6 +52,7 @@ extension HomeKitManagerProtocol {
 // MARK: - HomeKitManager conformance
 
 extension HomeKitManager: HomeKitManagerProtocol {
+#if canImport(HomeKit)
     var homeManagerHomesCount: Int {
         homeManager.homes.count
     }
@@ -59,4 +60,8 @@ extension HomeKitManager: HomeKitManagerProtocol {
     var homeManagerAuthStatus: UInt {
         homeManager.authorizationStatus.rawValue
     }
+#else
+    var homeManagerHomesCount: Int { 0 }
+    var homeManagerAuthStatus: UInt { 0 }
+#endif
 }
